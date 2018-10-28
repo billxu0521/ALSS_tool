@@ -1,0 +1,71 @@
+body {
+    background-color: #eee;
+    transition: background-color .25s ease;
+    overflow-x: hidden;
+}
+body.dragged {
+    background-color: #ccf;
+}
+
+#container>p {
+            margin-bottom: 1em;
+        }
+
+#container {
+    padding: 7em 1em 7em 1em;
+    font-family: '微软雅黑' !important;
+    margin: auto;
+    font-size: 18px;
+    width: calc(100% - 2em);
+    max-width: 800px; min-height: 100%;
+    background-color: white;
+    box-shadow: 0 0 25px rgba(0,0,0,.25);
+}
+.charblock{
+    display: inline;
+}
+
+#container>p {
+    min-height: 1em;
+}
+#light {
+    position: fixed;
+    left: 0; right: 0; top: 100%;
+    background-color: #ccc;
+    height: 4px;
+    margin-top: -2px;
+    z-index: -3;
+}
+#file-load {
+    display: inline-block;
+}
+#txt {
+    width: 100%;
+    height: 12em;
+    display: block;
+}
+#txtbtn {
+    position: relative;
+    top: 10px; right: 10px;
+}
+#infobar {
+    font-family: Consolas, monospace;
+    position: fixed;
+    bottom: 10px; right: 15px;
+    text-align: right;
+}
+#txtbtn, #infobar {
+    z-index: 1;
+}
+#infobar>p {
+    margin: 0;
+}
+#infoswitch {
+    float: right;
+    background-color: transparent;
+    border: 0; padding: 10px;
+}
+.sub {
+    width: calc(20% - 4px);
+    display: inline-block;
+}

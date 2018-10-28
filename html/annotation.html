@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Shop Item - Start Bootstrap Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/shop-item.css" rel="stylesheet">
+    <link href="css/reader.css" rel="stylesheet">
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+      $(function() {
+        console.log("ALSS START");
+        try {
+          navigator.getBattery().then(function(battery) {
+            function update() {
+              $('#battery-status').html(
+                (battery.charging?'':('<span class="glyphicon glyphicon-flash"></span>'+parseInt(battery.level*10000)/100+'%'))
+              );
+            }
+            battery.onchargingchange=battery.onlevelchange=update;
+            update();
+          });
+        } catch(_) {}
+        gettime();
+        setInterval(gettime,1000);
+        window.reading_prog=100;
+        window.drag_counter=0;
+        $(window)
+        .on('beforeunload',function() {
+          if(reading_prog<98)
+          return '離開此頁面，資料會被清除';
+        })
+        .on('keydown',function(event) {
+          if(event.keyCode===36 || event.keyCode===35) // home & end
+          if($(document).height()>10*document.body.clientHeight && !confirm('注意：您按下了 '+event.key+' 键。'))
+          event.preventDefault();
+        });
+        $('body')
+        .on('dragenter',function() {
+          window.drag_counter++;
+          $('body').addClass('dragged');
+        })
+        .on('dragleave',function() {
+          if(--window.drag_counter==0)
+          $('body').removeClass('dragged');
+        })
+        .on('dragover',function(event) {event.preventDefault();})
+        .on('drop',function(event) {
+          event.preventDefault();
+          window.drag_counter=0;
+          $('body').removeClass('dragged');
+          var fr=new FileReader();
+          fr.onload=function() {
+            load(fr.result);
+          }
+          fr.readAsText(event.originalEvent.dataTransfer.files[0]);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">古漢語斷句主動學習系統</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">斷句標註
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">
+        <span class="glyphicon glyphicon-book hidden-xs"></span>
+        <span id="prog">讀取文本</span>       
+      </button>
+
+       
+        <!-- /.col-lg-3 -->
+
+        <div class="col-lg-9">
+
+          <div >
+            
+          </div>
+          <!-- /.card -->
+
+          <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              文本顯示區
+            </div>
+
+            <!--文字設定視窗-->
+            <div class="card-body" id="all-text" onscroll="calc()">
+
+            </div>
+            <div class="x-ray" id="x-top" style="margin-top: -4px;"></div>
+    <div class="x-ray" id="x-bottom"></div>
+
+    <div class="modal fade" id="myModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            <h4 class="modal-title">
+                讀取文本&nbsp;
+                <input type="file" id="file-load" onchange="loadfile(this)">
+            </h4>
+        </div>
+        <div class="modal-body">
+            <textarea id="txt" class="form-control" placeholder="貼上文本內容……"></textarea>
+            <br>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">字體大小</span>
+                <input type="text" id="fontsize" class="form-control" value="30px">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">段落間距</span>
+                <input type="text" id="margin" class="form-control" value="0em">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">前景顏色</span>
+                <input type="text" id="color" class="form-control" value="black">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">背景顏色</span>
+                <input type="text" id="bgcolor" class="form-control" value="white">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">頁面寬度</span>
+                <input type="text" id="maxwidth" class="form-control" value="800px">
+            </div></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" onclick="load()">讀取</button>
+        </div>
+        </div></div></div>
+            </div>
+          
+          <!-- /.card -->
+
+        </div>
+        <!-- /.col-lg-9 -->
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; ALSS@biilxu 2017</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    
+
+  </body>
+
+</html>
