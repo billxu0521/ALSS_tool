@@ -2,7 +2,7 @@
 主功能的js
  */
 
-
+//目前時間
 function gettime() {
 	var time=new Date();
     $('#timebar').text(
@@ -14,7 +14,6 @@ function gettime() {
 //讀取文本
 function load(override_txt_val) {
 	var lines=(override_txt_val||$('#txt').val()).split('\n'),
-
     container=document.getElementById('all-text');
     $(container)
     	.text('')
@@ -27,18 +26,19 @@ function load(override_txt_val) {
 
 	for(var pos=0;pos<lines.length;pos++) {
                 var elem= document.createElement('p');
-                var char = lines[pos].split("");
-                console.log(char);
-                for(var i in char){
+                var charary = lines[pos].split("");
+                for(var i in charary){
                     var char_p = $("<div></div>")
                         .addClass('charblock')
-                        .text(char[i]);
+                        .attr('id','char')
+                        .text(charary[i]);
                     var seg_block = $("<div></div>")
-                    .addClass('charblock')
-                    .text("_");
+                        .addClass('charblock')
+                        .attr('id','seg')
+                        .text("　");
                     $("#all-text")
-                    .append(char_p)
-                    .append(seg_block);
+                        .append(char_p)
+                        .append(seg_block);
                 }
                 //elem.textContent=lines[pos];
                 //container.appendChild(elem);
@@ -47,6 +47,7 @@ function load(override_txt_val) {
 	$('#myModal').modal('hide');
 }
 
+//讀檔
 function loadfile(fil) {
 	var fr=new FileReader();
     fr.onload=function() {
@@ -61,6 +62,33 @@ function calc() {
     $('#light').css('top',reading_prog+'%');
     $('#x-top').css('top',$(window).scrollTop());
     $('#x-bottom').css('top',Math.min(document.body.clientHeight+$(window).scrollTop(),$(document).height()-4));
+}
+
+//標註斷句
+function annosegment(){
+    $(document).on('click', '#seg', function(event){
+        var segary = segmentcount();
+        var nowseg = $('div#seg').index(this);
+        if(segary[nowseg] == 0){
+            $(this).text(',');
+        }else if(segary[nowseg] == 1){
+            $(this).text(' ');
+        }
+    });
+}
+
+//計算標註陣列
+function segmentcount(){
+    var segary = []; //紀錄是否斷句 0=沒斷 1=有斷
+    var textary=$("div#seg").toArray();
+    for(var i in textary){
+        if(textary[i].textContent == ','){
+            segary.push(1);
+        }else{
+            segary.push(0);
+        }
+    }
+    return segary;
 }
 
 function infoswitch() {

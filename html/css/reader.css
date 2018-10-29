@@ -25,6 +25,21 @@ body.dragged {
     display: inline;
 }
 
+#all-text{
+    display: flex | inline-flex;
+    flex-wrap: wrap;
+}
+
+#char{
+    text-decoration:underline;
+}
+
+#seg{
+    border-style:dashed;
+    border-width:1px;
+    padding: 3px;
+}
+
 #container>p {
     min-height: 1em;
 }
