@@ -25,7 +25,7 @@ body.dragged {
 }
 .charblock{
     display: inline-flex;
-    
+    margin-bottom:20px;
 }
 
 #all-text{

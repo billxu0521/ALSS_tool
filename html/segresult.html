@@ -23,54 +23,9 @@
 
     <script>
       $(function() {
-        console.log("ALSS START");
-        try {
-          navigator.getBattery().then(function(battery) {
-            function update() {
-              $('#battery-status').html(
-                (battery.charging?'':('<span class="glyphicon glyphicon-flash"></span>'+parseInt(battery.level*10000)/100+'%'))
-              );
-            }
-            battery.onchargingchange=battery.onlevelchange=update;
-            update();
-          });
-        } catch(_) {}
-        annosegment();//啟動標註
-        gettime();
-        setInterval(gettime,1000);
-        window.reading_prog=100;
-        window.drag_counter=0;
-        $(window)
-        .on('beforeunload',function() {
-          if(reading_prog<98)
-          return '離開此頁面，資料會被清除';
-        })
-        .on('keydown',function(event) {
-          if(event.keyCode===36 || event.keyCode===35) // home & end
-          if($(document).height()>10*document.body.clientHeight && !confirm('注意：您按下了 '+event.key+' 键。'))
-          event.preventDefault();
-        });
-        $('body')
-        .on('dragenter',function() {
-          window.drag_counter++;
-          $('body').addClass('dragged');
-        })
-        .on('dragleave',function() {
-          if(--window.drag_counter==0)
-          $('body').removeClass('dragged');
-        })
-        .on('dragover',function(event) {event.preventDefault();})
-        .on('drop',function(event) {
-          event.preventDefault();
-          window.drag_counter=0;
-          $('body').removeClass('dragged');
-          var fr=new FileReader();
-          fr.onload=function() {
-            load(fr.result);
-          }
-          fr.readAsText(event.originalEvent.dataTransfer.files[0]);
-        });
-
+        load();//暫時
+        segload();
+        relod();
       });
     </script>
   </head>
@@ -96,7 +51,6 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            
           </ul>
         </div>
       </div>
@@ -104,18 +58,20 @@
 
     <!-- Page Content -->
     <div class="container">
-      <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal">
-        <span class="glyphicon glyphicon-book hidden-xs"></span>
-        <span id="prog">讀取文本</span>       
-      </button>
+      <div class="row">
 
+        <div class="col-lg-3">
+          <h1 class="my-4">全部斷句結果</h1>
+          <div class="list-group">
+            <a href="#" class="list-group-item active" id="reload">第一回合</a>
+            <a href="#" class="list-group-item" id="reload">第二回合</a>
+            <a href="#" class="list-group-item" id="reload">第三回合</a>
+          </div>
+        </div>
         <!-- /.col-lg-3 -->
 
         <div class="col-lg-9">
 
-          <div >
-            
-          </div>
           <!-- /.card -->
 
           <div class="card card-outline-secondary my-4">
