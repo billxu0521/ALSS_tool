@@ -23,8 +23,7 @@
 
     <script>
       $(function() {
-        load();//暫時
-        segload();
+        segload(1);
         relod();
       });
     </script>
@@ -63,9 +62,9 @@
         <div class="col-lg-3">
           <h1 class="my-4">全部斷句結果</h1>
           <div class="list-group">
-            <a href="#" class="list-group-item active" id="reload">第一回合</a>
-            <a href="#" class="list-group-item" id="reload">第二回合</a>
-            <a href="#" class="list-group-item" id="reload">第三回合</a>
+            <a href="#" class="list-group-item active" id="reload" value="1">第一回合</a>
+            <a href="#" class="list-group-item" id="reload" value="2">第二回合</a>
+            <a href="#" class="list-group-item" id="reload" value="3">第三回合</a>
           </div>
         </div>
         <!-- /.col-lg-3 -->
