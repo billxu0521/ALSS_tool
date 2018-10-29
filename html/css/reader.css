@@ -17,17 +17,21 @@ body.dragged {
     margin: auto;
     font-size: 18px;
     width: calc(100% - 2em);
-    max-width: 800px; min-height: 100%;
-    background-color: white;
+    max-width: 100%; 
+    min-height: 100%;
+    background-color: 
+    white;
     box-shadow: 0 0 25px rgba(0,0,0,.25);
 }
 .charblock{
-    display: inline;
+    display: inline-flex;
+    
 }
 
 #all-text{
-    display: flex | inline-flex;
+    display: flex ;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 #char{
@@ -37,7 +41,9 @@ body.dragged {
 #seg{
     border-style:dashed;
     border-width:1px;
-    padding: 3px;
+    padding-right: 3px;
+    padding-left: 3px;
+    cursor: pointer;
 }
 
 #container>p {
@@ -83,4 +89,10 @@ body.dragged {
 .sub {
     width: calc(20% - 4px);
     display: inline-block;
+}
+
+@media (min-width: 992px){
+.col-lg-9{
+    max-width: 100% !important;
+}
 }
