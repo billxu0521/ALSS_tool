@@ -34,6 +34,10 @@ body.dragged {
     align-items: center;
 }
 
+#all-text > div {
+    width: calc(100%/20);
+}
+
 #char{
     text-decoration:underline;
 }
