@@ -26,6 +26,7 @@ body.dragged {
 .charblock{
     display: inline-flex;
     margin-bottom:20px;
+    position:relative;
 }
 
 #all-text{
@@ -43,11 +44,19 @@ body.dragged {
 }
 
 #seg{
+}
+
+#segline{
+    position: absolute;
     border-style:dashed;
     border-width:1px;
     padding-right: 3px;
     padding-left: 3px;
     cursor: pointer;
+    right: 20%;
+    top:40%;
+    width: 60%;
+    height:60%;
 }
 
 #container>p {
@@ -93,6 +102,14 @@ body.dragged {
 .sub {
     width: calc(20% - 4px);
     display: inline-block;
+}
+
+.modal-title{
+    text-align: center;
+}
+
+#file-load{
+    text-align: center;
 }
 
 @media (min-width: 992px){

@@ -24,6 +24,7 @@
     <script>
       $(function() {
         console.log("ALSS START");
+        showexport();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -104,9 +105,13 @@
 
     <!-- Page Content -->
     <div class="container">
-      <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModal" title="w22">
+      <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#inputModal" title="w22">
         <span class="glyphicon glyphicon-book hidden-xs"></span>
         <span id="prog">讀取文本</span>       
+      </button>
+      <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#ouputModal" title="w22">
+        <span class="glyphicon glyphicon-book hidden-xs"></span>
+        <span id="prog">輸出文本</span>       
       </button>
       
 
@@ -133,13 +138,15 @@
             <div class="x-ray" id="x-top" style="margin-top: -4px;"></div>
     <div class="x-ray" id="x-bottom"></div>
 
-    <div class="modal fade" id="myModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal fade" id="inputModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-            <h4 class="modal-title">
+        </div>
+        <h4 class="modal-title">
                 讀取文本&nbsp;
-                <input type="file" id="file-load" onchange="loadfile(this)">
-            </h4>
+        </h4>
+        <div id="file-load">
+          <input type="file" id="file-load" onchange="loadfile(this)">
         </div>
         <div class="modal-body">
             <textarea id="txt" class="form-control" placeholder="貼上文本內容……"></textarea>
@@ -172,6 +179,40 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
           <button type="button" class="btn btn-primary" onclick="load()">讀取</button>
+        </div>
+        </div></div></div>
+
+        <div class="modal fade" id="ouputModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+        
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <h4 class="modal-title">
+                輸出文本&nbsp;
+        </h4>
+        <div class="modal-body">
+            <textarea id="outputtxt" class="form-control" placeholder="貼上文本內容……"></textarea>
+            <br>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">字體大小</span>
+                <input type="text" id="fontsize" class="form-control" value="30px">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">段落間距</span>
+                <input type="text" id="margin" class="form-control" value="0em">
+            </div></div>
+            <div class="sub"><div class="input-group">
+                <span class="input-group-addon">行間距</span>
+                <input type="text" id="wordmargin" class="form-control" value="20px">
+            </div></div>
+            <!--div class="sub"><div class="input-group">
+                <span class="input-group-addon">頁面寬度</span>
+                <input type="text" id="maxwidth" class="form-control" value="800px">
+            </div></div-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" onclick="exporttxt()">輸出</button>
         </div>
         </div></div></div>
             </div>

@@ -33,15 +33,15 @@ function load(override_txt_val) {
                 for(var i in charary){
                     var char_p = $("<div></div>")
                         .addClass('charblock')
-                        .css('margin-bottom',$('#wordmargin').val())
                         .attr('id','char')
-                        .text(charary[i]);
+                        .text(charary[i]);                    
                     var seg_block = $("<div></div>")
                         .addClass('charblock')
                         .attr('id','seg')
                         .attr('title','請點擊此框進行標註')
-                        .text("　");
-                    $("#all-text")
+                        .text('　')
+                        .append("<div id='segline'></div>");
+                        $("#all-text")
                         .append(char_p)
                         .append(seg_block);
                 }
@@ -49,8 +49,34 @@ function load(override_txt_val) {
                 //container.appendChild(elem);
         }
     	calc();
-	$('#myModal').modal('hide');
     $('.charblock').tooltip();
+	$('#inputModal').modal('hide');
+}
+
+//當輸出視窗被打開時讀取
+function showexport(){
+    $('#ouputModal').on('shown.bs.modal', function (e) {
+        var alltxtary = [];
+        var alltxt = "";
+        var textary=$("div.charblock").toArray();
+        //var segary=$("div#seg").toArray();
+        for(var i in textary){
+            var _char = textary[i].textContent;
+            //alltxtary.push(_char);
+            if(_char == '　'){
+                continue;
+            }else{
+                alltxt += _char;
+            }
+        }
+        $('textarea#outputtxt').val(alltxt);
+    })
+}
+
+//輸出文本
+function exporttxt(){
+    var alltxt = $('textarea#outputtxt').val();    
+    console.log(alltxt);
 }
 
 //讀檔
@@ -76,9 +102,9 @@ function annosegment(){
         var segary = segmentcount();
         var nowseg = $('div#seg').index(this);
         if(segary[nowseg] == 0){
-            $(this).text(',').css('padding-right',14).css('padding-left',14);
+            $(this).text(',').css('padding-right',14).css('padding-left',14).append("<div id='segline'></div>");
         }else if(segary[nowseg] == 1){
-            $(this).text('　').css('padding-right',3).css('padding-left',3);
+            $(this).text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
         }
         var segary = segmentcount();
         var time = gettime();
