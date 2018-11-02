@@ -25,6 +25,7 @@
       $(function() {
         console.log("ALSS START");
         showexport();
+        sendtext();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -113,6 +114,11 @@
         <span class="glyphicon glyphicon-book hidden-xs"></span>
         <span id="prog">輸出文本</span>       
       </button>
+      <button type="button" id="txtbtn" name="sendtext" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-book hidden-xs"></span>
+        <span id="prog">預測文本</span>       
+      </button>
+      
       
 
         <!-- /.col-lg-3 -->
@@ -149,7 +155,7 @@
           <input type="file" id="file-load" onchange="loadfile(this)">
         </div>
         <div class="modal-body">
-            <textarea id="txt" class="form-control" placeholder="貼上文本內容……"></textarea>
+            <textarea id="txt" class="form-control" placeholder="貼上文本內容……" name="input_text"></textarea>
             <br>
             <div class="sub"><div class="input-group">
                 <span class="input-group-addon">字體大小</span>
@@ -191,24 +197,8 @@
                 輸出文本&nbsp;
         </h4>
         <div class="modal-body">
-            <textarea id="outputtxt" class="form-control" placeholder="貼上文本內容……"></textarea>
+            <textarea id="outputtxt" class="form-control" placeholder="目前無內容……"></textarea>
             <br>
-            <div class="sub"><div class="input-group">
-                <span class="input-group-addon">字體大小</span>
-                <input type="text" id="fontsize" class="form-control" value="30px">
-            </div></div>
-            <div class="sub"><div class="input-group">
-                <span class="input-group-addon">段落間距</span>
-                <input type="text" id="margin" class="form-control" value="0em">
-            </div></div>
-            <div class="sub"><div class="input-group">
-                <span class="input-group-addon">行間距</span>
-                <input type="text" id="wordmargin" class="form-control" value="20px">
-            </div></div>
-            <!--div class="sub"><div class="input-group">
-                <span class="input-group-addon">頁面寬度</span>
-                <input type="text" id="maxwidth" class="form-control" value="800px">
-            </div></div-->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

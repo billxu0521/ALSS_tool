@@ -14,7 +14,7 @@ function gettime() {
 
 //讀取文本
 function load(override_txt_val) {
-    override_txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
+    //override_txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
 	var lines=(override_txt_val||$('#txt').val()).split('\n'),
     container=document.getElementById('all-text');
     $(container)
@@ -134,19 +134,55 @@ function infoswitch() {
 function showseg(resrary){
     for(var i in resrary){
         var ele=$("div#seg").eq(i);
-        if(resrary[i] == 0){
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3);
-            ele.text(',').css('padding-right',14).css('padding-left',14);
-        }else if(resrary[i] == 1){
-            ele.text('　').css('padding-right',3).css('padding-left',3);
-            ele.text(',').css('background-color','#66FF66').css('padding-right',14).css('padding-left',14);
-        }else if(resrary[i] == 2){
-            ele.text('　').css('padding-right',3).css('padding-left',3);
-            ele.text(',').css('background-color','#33FFFF').css('padding-right',14).css('padding-left',14);
-        }else{
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3);
+        if(resrary[i] == 'N'){
+            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+        }else if(resrary[i] == 'S'){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
         }
     }
+}
+
+//產出標點符號temp
+function showseg_temp(resrary){
+    for(var i in resrary){
+        var ele=$("div#seg").eq(i);
+        if(resrary[i] == 0){
+            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.text(',').css('padding-right',14).css('padding-left',10).append("<div id='segline'></div>");
+        }else if(resrary[i] == 1){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
+        }else if(resrary[i] == 2){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.text(',').css('background-color','#33FFFF').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
+        }else{
+            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+        }
+    }
+}
+//送出預測文本
+function sendtext(){
+    $(document).on('click', 'button[name="sendtext"]', function(event){
+        $.ajax({
+            url: 'http://localhost:5000/preseg',
+            data: $('textarea#txt').serialize(),
+            type: 'POST',
+            success: function(response) {
+                obj = JSON.parse(response);
+                //console.log(decodeURIComponent(obj.data));
+                res = decodeURIComponent(obj.data);
+                var resary = res.split(",");
+                resary.shift();
+                console.log(resary);
+                showseg(resary);
+                
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
 }
 
 //斷句結果換分頁
@@ -214,6 +250,6 @@ function segload(num){
             resrary.push(3);
         }
     }
-    showseg(resrary);
+    showseg_temp(resrary);
     console.log(resrary);
 }
