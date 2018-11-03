@@ -143,24 +143,7 @@ function showseg(resrary){
     }
 }
 
-//產出標點符號temp
-function showseg_temp(resrary){
-    for(var i in resrary){
-        var ele=$("div#seg").eq(i);
-        if(resrary[i] == 0){
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.text(',').css('padding-right',14).css('padding-left',10).append("<div id='segline'></div>");
-        }else if(resrary[i] == 1){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
-        }else if(resrary[i] == 2){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.text(',').css('background-color','#33FFFF').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
-        }else{
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-        }
-    }
-}
+
 //送出預測文本
 function sendtext(){
     $(document).on('click', 'button[name="sendtext"]', function(event){
@@ -184,6 +167,29 @@ function sendtext(){
         });
     });
 }
+
+
+//產出標點符號temp
+function showseg_temp(resrary){
+    for(var i in resrary){
+        var ele=$("div#seg").eq(i);
+        var ele_bk=$("#seg > #segline").eq(i);
+        if(resrary[i] == 0){
+            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.val(',').css('padding-right',14).css('padding-left',10).append("<div id='segline'></div>");
+
+        }else if(resrary[i] == 1){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.children('#segline').text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).css('line-height','30%');
+        }else if(resrary[i] == 2){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.children('#segline').text(',').css('background-color','#33FFFF').css('padding-right',10).css('padding-left',10).css('line-height','30%');
+        }else{
+            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+        }
+    }
+}
+
 
 //斷句結果換分頁
 function relod(){
