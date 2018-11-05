@@ -121,6 +121,28 @@ body.dragged {
     text-align: center;
 }
 
+.anno_tip{
+    display: inline-block ;
+}
+
+#sys_anno{
+    background-color:#33FFFF;
+    border-style:dashed;
+    border-width:1px;
+}
+
+#user_anno{
+    background-color:#66FF66;
+    border-style:dashed;
+    border-width:1px;
+}
+
+#all_anno{
+    background-color:#FFFFFF;
+    border-style:dashed;
+    border-width:1px;
+}
+
 @media (min-width: 992px){
 .col-lg-9{
     max-width: 100% !important;

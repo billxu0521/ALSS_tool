@@ -171,13 +171,14 @@ function sendtext(){
 
 //產出標點符號temp
 function showseg_temp(resrary){
+    console.log(resrary);
     for(var i in resrary){
         var ele=$("div#seg").eq(i);
         var ele_bk=$("#seg > #segline").eq(i);
-        if(resrary[i] == 0){
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.val(',').css('padding-right',14).css('padding-left',10).append("<div id='segline'></div>");
 
+        if(resrary[i] == 0){
+            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            ele.children('#segline').text(',').css('background-color','#FFFFFF').css('padding-right',10).css('padding-left',10).css('line-height','30%');
         }else if(resrary[i] == 1){
             ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
             ele.children('#segline').text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).css('line-height','30%');
@@ -227,7 +228,7 @@ function segload(num){
     var userary = [];
     var resrary = [];
     for(var i in textary){
-        var ran = getRandom(1,15);
+        var ran = getRandom(1,10);
         if(ran == 1){
             autoary.push(1);
         }else{
