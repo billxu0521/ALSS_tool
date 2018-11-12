@@ -14,7 +14,7 @@ function gettime() {
 
 //讀取文本
 function load(override_txt_val) {
-    //override_txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
+    override_txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
 	var lines=(override_txt_val||$('#txt').val()).split('\n'),
     container=document.getElementById('all-text');
     $(container)
@@ -147,9 +147,10 @@ function showseg(resrary){
 //送出預測文本
 function sendtext(){
     $(document).on('click', 'button[name="sendtext"]', function(event){
+        //console.log($('textarea#outputtxt'));
         $.ajax({
-            url: 'http://localhost:5000/preseg',
-            data: $('textarea#txt').serialize(),
+            url: 'https://crf-web.herokuapp.com/preseg',
+            data: $('textarea#outputtxt').serialize(),
             type: 'POST',
             success: function(response) {
                 obj = JSON.parse(response);
