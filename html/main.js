@@ -31,7 +31,8 @@ function load(override_txt_val) {
                 var elem= document.createElement('p');
                 var charary = lines[pos].split("");
                 for(var i in charary){
-                    var char_p = $("<div></div>")
+                    
+                    var char_block = $("<div></div>")
                         .addClass('charblock')
                         .attr('id','char')
                         .text(charary[i]);                    
@@ -41,9 +42,12 @@ function load(override_txt_val) {
                         .attr('title','請點擊此框進行標註')
                         .text('　')
                         .append("<div id='segline'></div>");
-                        $("#all-text")
-                        .append(char_p)
-                        .append(seg_block);
+                    var char_seg = $("<div></div>")
+                        .addClass('charseg')
+                        .append(char_block)
+                        .append(seg_block);;
+                    $("#all-text")
+                        .append(char_seg);
                 }
                 //elem.textContent=lines[pos];
                 //container.appendChild(elem);
@@ -102,13 +106,33 @@ function annosegment(){
         var segary = segmentcount();
         var nowseg = $('div#seg').index(this);
         if(segary[nowseg] == 0){
-            $(this).text(',').css('padding-right',14).css('padding-left',14).append("<div id='segline'></div>");
+            $(this).text(',').css('padding-right',15).css('padding-left',10).append("<div id='segline'></div>");
+            $(this).find('#segline').css('border-width','1px').css('width','80%');
         }else if(segary[nowseg] == 1){
-            $(this).text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
+            $(this).text('　').css('padding-right',0).css('padding-left',0).append("<div id='segline'></div>");
+            $(this).find('#segline').css('border-width','1px').css('width','80%');
         }
         var segary = segmentcount();
         var time = gettime();
         console.log(time + "////回傳斷句" + segary);
+    });
+    $(document).on('mouseenter', '.charseg', function(event){
+        $(this).find('#seg').find('#segline').animate({
+            borderWidth:'1px',
+            width: '65%'
+        });
+        $(this).find('#seg').animate({
+            width: '30px'
+        });
+    });
+    $(document).on('mouseleave', '.charseg', function(event){
+        $(this).find('#seg').find('#segline').animate({
+            borderWidth:'0px',
+            width: '0%'
+        });
+        $(this).find('#seg').animate({
+            width: '10px'
+        });
     });
 }
 
