@@ -39,11 +39,11 @@ function load(override_txt_val) {
                     var seg_block = $("<div></div>")
                         .addClass('charblock')
                         .attr('id','seg')
-                        .attr('title','請點擊此框進行標註')
                         .text('　')
                         .append("<div id='segline'></div>");
                     var char_seg = $("<div></div>")
                         .addClass('charseg')
+                        .attr('title','請點擊進行標註')
                         .append(char_block)
                         .append(seg_block);;
                     $("#all-text")
@@ -53,7 +53,7 @@ function load(override_txt_val) {
                 //container.appendChild(elem);
         }
     	calc();
-    $('.charblock').tooltip();
+    $('.charseg').tooltip();
 	$('#inputModal').modal('hide');
 }
 
@@ -100,24 +100,44 @@ function calc() {
     $('#x-bottom').css('top',Math.min(document.body.clientHeight+$(window).scrollTop(),$(document).height()-4));
 }
 
-//標註斷句
+//標註斷句符號的功能
 function annosegment(){
-    $(document).on('click', '#seg', function(event){
+    $(document).on('click', '.charseg', function(event){
         var segary = segmentcount();
-        var nowseg = $('div#seg').index(this);
+        var nowseg = $('div.charseg').index(this);
+        console.log(nowseg);
         if(segary[nowseg] == 0){
-            $(this).text(',').css('padding-right',15).css('padding-left',10).append("<div id='segline'></div>");
-            $(this).find('#segline').css('border-width','1px').css('width','80%');
+            $(this).find('#seg')
+                .text(',')
+                .css('padding-right',15)
+                .css('padding-left',10)
+                .append("<div id='segline'></div>");
+            $(this).find('#seg').find('#segline')
+                .css('border-width','1px')
+                .css('width','90%')
+                .css('background-color','#CCEEFF')
+                .css('z-index','-1')
+                .animate({width: '65%'});
         }else if(segary[nowseg] == 1){
-            $(this).text('　').css('padding-right',0).css('padding-left',0).append("<div id='segline'></div>");
-            $(this).find('#segline').css('border-width','1px').css('width','80%');
+            $(this).find('#seg')
+                .text('　')
+                .css('padding-right',0)
+                .css('padding-left',0)
+                .append("<div id='segline'></div>");
+            $(this).find('#seg').find('#segline')
+                .css('border-width','1px')
+                .css('background-color','#FFFFFF')
+                .css('z-index','0')
+                .css('width','90%')
+                .animate({width: '65%'});
         }
         var segary = segmentcount();
         var time = gettime();
         console.log(time + "////回傳斷句" + segary);
     });
     $(document).on('mouseenter', '.charseg', function(event){
-        $(this).find('#seg').find('#segline').animate({
+        $(this).find('#seg').find('#segline')
+        .animate({
             borderWidth:'1px',
             width: '65%'
         });
@@ -126,12 +146,14 @@ function annosegment(){
         });
     });
     $(document).on('mouseleave', '.charseg', function(event){
-        $(this).find('#seg').find('#segline').animate({
+        $(this).find('#seg').find('#segline')
+        .css('background-color','#FFFFFF')
+        .animate({
             borderWidth:'0px',
             width: '0%'
         });
         $(this).find('#seg').animate({
-            width: '10px'
+            width: '5px'
         });
     });
 }

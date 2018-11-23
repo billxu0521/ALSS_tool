@@ -45,8 +45,13 @@ body.dragged {
     /*width: calc(100%/50);*/
 }
 
+.charseg{
+  cursor: pointer;
+  
+}
+
 #char{
-    
+  padding-left: 3px;
 }
 
 #char:hover{
@@ -54,7 +59,9 @@ body.dragged {
 }
 
 #seg{
-    width: 10px;
+    width: 5px;
+    z-index:1;
+    background-color: rgba(255,255,255,0.4);
 }
 
 #segline{
@@ -63,7 +70,6 @@ body.dragged {
     border-width:0px;
     padding-right: 1%;
     padding-left: 5px;
-    cursor: pointer;
     right: 5px;
     left: 5px;
     top:15%;
