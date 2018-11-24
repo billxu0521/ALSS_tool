@@ -105,7 +105,7 @@ function annosegment(){
     $(document).on('click', '.charseg', function(event){
         var segary = segmentcount();
         var nowseg = $('div.charseg').index(this);
-        console.log(nowseg);
+        //console.log(nowseg);
         if(segary[nowseg] == 0){
             $(this).find('#seg')
                 .text(',')
@@ -133,7 +133,7 @@ function annosegment(){
         }
         var segary = segmentcount();
         var time = gettime();
-        console.log(time + "////回傳斷句" + segary);
+        //console.log(time + "////回傳斷句" + segary);
     });
     $(document).on('mouseenter', '.charseg', function(event){
         $(this).find('#seg').find('#segline')
@@ -190,12 +190,43 @@ function showseg(resrary){
 }
 
 
+//送出文本建立模型
+//1:CRF
+function buildModel(){
+    var def_rul = '';
+    model = 1;
+    if(model === 1){
+        def_rul = 'http://localhost:5000/buildcrfmodel';
+    }else if(model === 2){
+
+    }else if(model === 3){
+
+    }
+    $(document).on('click', 'button[name="buildmodel"]', function(event){
+        console.log($('textarea#outputtxt'));
+        $.ajax({
+            url: def_rul,
+            data: $('textarea#outputtxt').serialize(),
+            type: 'POST',
+            success: function(response) {
+                obj = JSON.parse(response);
+                //console.log(decodeURIComponent(obj.data));
+                res = decodeURIComponent(obj.data);
+                alert('已建立模型:'+res);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+}
+
 //送出預測文本
 function sendtext(){
     $(document).on('click', 'button[name="sendtext"]', function(event){
         //console.log($('textarea#outputtxt'));
         $.ajax({
-            url: 'https://crf-web.herokuapp.com/preseg',
+            url: 'http://localhost:5000/preseg',
             data: $('textarea#outputtxt').serialize(),
             type: 'POST',
             success: function(response) {

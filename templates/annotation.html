@@ -16,7 +16,7 @@
     <link href="css/reader.css" rel="stylesheet">
     <link href="css/shop-item.css" rel="stylesheet">
 
-    <!--For FLASK>
+    <!--For FLASK>    
     <link rel="text/javascript" href="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -33,7 +33,6 @@
         console.log("ALSS START");
         showexport();
         sendtext();
-        buildModel();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -209,9 +208,7 @@
             <br>
         </div>
         <div class="modal-footer">
-          <button type="button" id="buildmodel" name="buildmodel" class="btn btn-default btn-sm">
-            <span id="prog">建立CRF模型</span>       
-          </button>
+          <button type="button" class="btn btn-primary" onclick="buildModel(1)">建立CRF模型</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
           <button type="button" class="btn btn-primary" onclick="exporttxt()">輸出</button>
         </div>
