@@ -12,10 +12,87 @@ function gettime() {
     return time;
 }
 
+//本地儲存資料session temp
+function saveLocalDataTemp(){
+    sessionStorage.setItem("text-1","軒,轅之,時神農氏世衰諸侯相侵伐暴虐百,姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居"); //儲存資料，方法3
+    sessionStorage.setItem("text-2","東至于海登丸山及岱宗西至于空桐登雞頭南至于江登熊湘北逐葷粥合符釜山而邑于涿鹿之阿遷徙往來無常處以師兵為營衛官名皆以雲命為雲師置左右大監監于萬國萬國和而鬼神山川封禪與為多焉獲寶鼎迎日推筴舉風后力牧常先大鴻以治民順天地之紀幽明之占死生之說存亡之難時播百穀草木淳化鳥獸蟲蛾旁羅日月星辰水波土石金玉勞勤心力耳目節用水火材物有土德之瑞故號黃帝"); //儲存資料，方法3
+    //sessionStorage.removeItem("test1"); //刪除key值為test1這筆資料
+    //sessionStorage.clear(); //刪除localStorage裡所有資料
+    row_text = sessionStorage.getItem("text-1");
+    obj = calsegary(row_text);
+    console.log(obj);
+    sessionStorage.setItem('1',JSON.stringify(obj));
+}
+
+
+//本地儲存資料session
+function saveLocalData(num,data){
+    var obj = calsegary(data);
+    console.log(num + '-SAVE');
+    //console.log(obj);
+    sessionStorage.setItem(num,JSON.stringify(obj));
+}
+
+
+//計算文字中的斷句成陣列
+function calsegary(data){
+    var dataary = data.split('');
+    var segary = [];
+    var datatext = '';
+    for(var i in dataary){
+        if(dataary[i] == ','){
+            segary.pop();
+            segary.push(1);//有斷句
+            continue;
+        }else{
+            segary.push(0);//無斷句
+            datatext += dataary[i];
+        }
+    }
+    var obj = {
+        'text':datatext,
+        'seg':segary
+    }
+    return obj;
+}
+
+//讀取全部文本
+function loadall() {
+    var alltext = $('#inputalltxt').val().replace(/\r\n|\n/g,"").replace(/\s+/g, "").split('--');
+    for(var i in alltext){
+        var _a = (parseInt(i)+1);
+        saveLocalData(_a,alltext[i]);
+        if(i == 0){
+            continue;
+        }else{
+            var menubtn = $('<a></a>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('value',_a).text('第'+ _a +'區塊');
+            $('.list-group').append(menubtn);
+        }
+    }
+    var obj = sessionStorage.getItem('1');
+    rowtext = (JSON.parse(obj)).text;
+    serary = (JSON.parse(obj)).seg;
+    load(rowtext,serary);
+
+    $('#mainshowtext').css('visibility','visible');
+    $('#alltextlist').css('visibility','visible');
+    $('#textmenu').css('visibility','visible');
+    $('.custombtn').css('visibility','hidden');
+    $('.col-lg-9').css('flex','0 0 75%');
+    $('#inputAllModal').modal('hide');
+}
 //讀取文本
-function load(override_txt_val) {
-    override_txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
-	var lines=(override_txt_val||$('#txt').val()).split('\n'),
+function load(row_text=null,ser_ary=null) {
+    var serary = ser_ary;
+    var rowtext = row_text;
+
+    if (row_text == ''){
+        obj = sessionStorage.getItem("1");
+        rowtext = (JSON.parse(obj)).text;
+        serary = (JSON.parse(obj)).seg;
+    }
+    var lines=(rowtext||$('#txt').val()).split('\n'),
     container=document.getElementById('all-text');
     $(container)
     	.text('')
@@ -25,22 +102,29 @@ function load(override_txt_val) {
         .css('max-width',$('#maxwidth').val());
     $('#js-style')
        	.text('#container>p{margin-bottom:'+$('#margin').val()+';}');
-
-
 	for(var pos=0;pos<lines.length;pos++) {
                 var elem= document.createElement('p');
                 var charary = lines[pos].split("");
                 for(var i in charary){
-                    
                     var char_block = $("<div></div>")
                         .addClass('charblock')
                         .attr('id','char')
                         .text(charary[i]);                    
-                    var seg_block = $("<div></div>")
-                        .addClass('charblock')
-                        .attr('id','seg')
-                        .text('　')
-                        .append("<div id='segline'></div>");
+                    if(serary[i] == 1){
+                        var seg_block = $("<div></div>")
+                            .addClass('charblock')
+                            .attr('id','seg')
+                            .text(',')
+                            .css('padding-right',15)
+                            .css('padding-left',10)
+                            .append("<div id='segline'></div>");
+                    }else{
+                        var seg_block = $("<div></div>")
+                            .addClass('charblock')
+                            .attr('id','seg')
+                            .text('　')
+                            .append("<div id='segline'></div>");
+                    }
                     var char_seg = $("<div></div>")
                         .addClass('charseg')
                         .attr('title','請點擊進行標註')
@@ -57,22 +141,32 @@ function load(override_txt_val) {
 	$('#inputModal').modal('hide');
 }
 
+//整理顯示和標注的文本
+function calalltext(textary){
+    var alltext = "";
+    for(var i in textary){
+        var _char = textary[i].textContent;
+        if(_char == '　'){
+            continue;
+        }else{
+            alltext += _char;
+        }
+    }
+    return alltext
+}
+
+//當輸入視窗被打開時讀取
+function showinport(){
+    $('#inputModal').on('shown.bs.modal', function (e) {
+        var alltxt = getpagetext("div.charblock");
+        $('textarea#txt').val(alltxt);
+    })
+}
+
 //當輸出視窗被打開時讀取
 function showexport(){
     $('#ouputModal').on('shown.bs.modal', function (e) {
-        var alltxtary = [];
-        var alltxt = "";
-        var textary=$("div.charblock").toArray();
-        //var segary=$("div#seg").toArray();
-        for(var i in textary){
-            var _char = textary[i].textContent;
-            //alltxtary.push(_char);
-            if(_char == '　'){
-                continue;
-            }else{
-                alltxt += _char;
-            }
-        }
+        var alltxt = getpagetext("div.charblock");
         $('textarea#outputtxt').val(alltxt);
     })
 }
@@ -116,7 +210,6 @@ function annosegment(){
                 .css('border-width','1px')
                 .css('width','90%')
                 .css('background-color','#CCEEFF')
-                .css('z-index','-1')
                 .animate({width: '65%'});
         }else if(segary[nowseg] == 1){
             $(this).find('#seg')
@@ -237,7 +330,6 @@ function sendtext(){
                 resary.shift();
                 console.log(resary);
                 showseg(resary);
-                
             },
             error: function(error) {
                 console.log(error);
@@ -247,94 +339,30 @@ function sendtext(){
 }
 
 
-//產出標點符號temp
-function showseg_temp(resrary){
-    console.log(resrary);
-    for(var i in resrary){
-        var ele=$("div#seg").eq(i);
-        var ele_bk=$("#seg > #segline").eq(i);
-
-        if(resrary[i] == 0){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.children('#segline').text(',').css('background-color','#FFFFFF').css('padding-right',10).css('padding-left',10).css('line-height','30%');
-        }else if(resrary[i] == 1){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.children('#segline').text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).css('line-height','30%');
-        }else if(resrary[i] == 2){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.children('#segline').text(',').css('background-color','#33FFFF').css('padding-right',10).css('padding-left',10).css('line-height','30%');
-        }else{
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-        }
-    }
+//讀取頁面資料
+function getpagetext(selector){
+    var alltxt =$(selector).toArray();
+    var text = calalltext(alltxt);
+    return text;
 }
 
-
 //斷句結果換分頁
-function relod(){
-    $(document).on('click', '#reload', function(event){
+function relodpage(){
+    $(document).on('click', '#row-text', function(event){
+        var alltxt = getpagetext("div.charblock");
+        var num = $('.list-group-item.active').attr('value') ;
+        saveLocalData(num,alltxt);
         $(this).siblings().removeClass('active');
         $(this).addClass('active');
-        console.log($(this).attr('value'));
-        if($(this).attr('value') == 1){
-            segload(1);
-        }else if($(this).attr('value') == 2){
-            segload(2);
-        }else if($(this).attr('value') == 3){
-            segload(3);
-        }
+
+        var part = $(this).attr('value') ;
+        obj = sessionStorage.getItem(part);
+        rowtext = (JSON.parse(obj)).text;
+        serary = (JSON.parse(obj)).seg;
+        load(rowtext,serary);
     });
 }
 
 function getRandom(min,max){
         return Math.floor(Math.random()*(max-min+1))+min;
     };
-
-//假的斷句結果
-function segload(num){
-    if(num == 1){
-        txt_val="軒轅之時神農氏世衰諸侯相侵伐暴虐百姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居";
-    }else if(num == 2){
-        txt_val="東至于海登丸山及岱宗西至于空桐登雞頭南至于江登熊湘北逐葷粥合符釜山而邑于涿鹿之阿遷徙往來無常處以師兵為營衛官名皆以雲命為雲師置左右大監監于萬國萬國和而鬼神山川封禪與為多焉獲寶鼎迎日推筴舉風后力牧常先大鴻以治民順天地之紀幽明之占死生之說存亡之難時播百穀草木淳化鳥獸蟲蛾旁羅日月星辰水波土石金玉勞勤心力耳目節用水火材物有土德之瑞故號黃帝";
-    }else if(num == 3){
-        txt_val="黃帝居于軒轅之丘而娶于西陵之女是為嫘祖為黃帝正妃生二子其後皆有天下其一曰玄囂是為青陽青陽降居江水其二曰昌意降居若水昌意娶蜀山氏女曰昌仆生高陽高陽有聖德焉黃帝崩葬橋山其孫昌意之子高陽立是為帝顓頊也";
-    }
-
-    load(txt_val);
-    var textary = txt_val.split("");
-    var autoary = [];
-    var userary = [];
-    var resrary = [];
-    for(var i in textary){
-        var ran = getRandom(1,10);
-        if(ran == 1){
-            autoary.push(1);
-        }else{
-            autoary.push(0);
-        }
-    }
-
-    for(var i in textary){
-        var ran = getRandom(1,10);
-        if(ran == 1){
-            userary.push(1);
-        }else{
-            userary.push(0);
-        }
-    }
-
-    //0兩邊ㄧ樣 1電腦 2使用者
-    for(var i in autoary){
-        if(autoary[i] == 1 && userary[i] == 1){
-            resrary.push(0);
-        }else if(autoary[i] == 1){
-            resrary.push(1);
-        }else if(userary[i] == 1){
-            resrary.push(2);
-        }else{
-            resrary.push(3);
-        }
-    }
-    showseg_temp(resrary);
-    console.log(resrary);
-}

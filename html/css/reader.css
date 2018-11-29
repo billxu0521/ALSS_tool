@@ -19,11 +19,42 @@ body.dragged {
     width: calc(100% - 2em);
     max-width: 100%; 
     min-height: 100%;
-    background-color: 
-    white;
+    background-color: white;
     box-shadow: 0 0 25px rgba(0,0,0,.25);
 }
 
+#mainshowtext{
+    visibility:hidden;
+}
+
+#alltextlist{
+    visibility:hidden; 
+}
+
+#textmenu{
+    visibility:hidden; 
+}
+
+.custombtn{
+    width: 50%;
+    margin:auto;
+}
+
+#textlisttitle{
+    padding-top: 20%;
+}
+
+@media (min-width: 992px){
+    .col-lg-3 {
+        max-width: 15%;
+        position: fixed !important;
+    }
+}
+@media (min-width: 992px){
+    .col-lg-9 {
+        flex: 0 0 100%;
+    }
+}
 .charseg{
     display: inline-flex;
 
@@ -75,6 +106,7 @@ body.dragged {
     top:15%;
     width: 0%;
     height:75%;
+    z-index: -1;
 }
 
 #container>p {

@@ -32,8 +32,12 @@
       $(function() {
         console.log("ALSS START");
         showexport();
+        showinport();
         sendtext();
         buildModel();
+        saveLocalDataTemp();
+        //sessionStorage.clear();
+        relodpage();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -103,11 +107,6 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            <!--li class="nav-item active">
-              <a class="nav-link" href="segresult.html">斷句標註結果
-                <span class="sr-only">(current)</span>
-              </a>
-            </li-->
             
           </ul>
         </div>
@@ -116,6 +115,18 @@
 
     <!-- Page Content -->
     <div class="container">
+
+    <div class="row" >
+      <div class="col-lg-3" id="alltextlist">
+          <h2 class="my-4" id="textlisttitle">文本區塊</h2>
+          <div class="list-group">
+            <a class="list-group-item active" id="row-text" value="1">第1區塊</a>
+
+          </div>
+        </div>
+    
+        <!-- /.col-lg-3 -->
+  <div id="textmenu">
       <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#inputModal" title="打開輸入界面">
         <span class="glyphicon glyphicon-book hidden-xs"></span>
         <span id="prog">輸入文本</span>       
@@ -128,18 +139,17 @@
         <span class="glyphicon glyphicon-book hidden-xs"></span>
         <span id="prog">預測文本</span>       
       </button>
-      
-        <!-- /.col-lg-3 -->
-
-        <div class="col-lg-9">
-
-          <div >
-            
-          </div>
+    </div>
+        <div class="col-lg-9" >
           <!-- /.card -->
-
+          
           <div class="card card-outline-secondary my-4">
-            <div class="card-header">
+            <button type="button" id="txtbtn" class="custombtn" data-toggle="modal" data-target="#inputAllModal" title="打開輸出界面">
+            <span id="prog">載入全部文本</span>       
+            </button> 
+            
+
+            <div class="card-header" id="mainshowtext">
               文本顯示區
             </div>
 
@@ -149,8 +159,27 @@
                 
               </div>
             </div>
+
+
             <div class="x-ray" id="x-top" style="margin-top: -4px;"></div>
-    <div class="x-ray" id="x-bottom"></div>
+      <div class="x-ray" id="x-bottom"></div>
+
+    <div class="modal fade" id="inputAllModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+    <h4 class="modal-title">
+                載入全部文本&nbsp;
+        </h4>
+        <div class="modal-body">
+            <textarea id="inputalltxt" class="form-control" placeholder="目前無內容……" ></textarea>
+            <br>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" onclick="loadall()">輸出</button>
+        </div>
+      </div></div></div>
 
     <div class="modal fade" id="inputModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
         <div class="modal-header">
@@ -201,6 +230,8 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
+        
+
         <h4 class="modal-title">
                 輸出文本&nbsp;
         </h4>
@@ -216,16 +247,16 @@
           <button type="button" class="btn btn-primary" onclick="exporttxt()">輸出</button>
         </div>
         </div></div></div>
-            </div>
+        </div>
           
           <!-- /.card -->
 
         </div>
         <!-- /.col-lg-9 -->
 
+        </div>
       </div>
 
-    </div>
     <!-- /.container -->
 
     <!-- Footer -->
