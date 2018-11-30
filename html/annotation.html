@@ -35,7 +35,7 @@
         showinport();
         sendtext();
         buildModel();
-        saveLocalDataTemp();
+        //saveLocalDataTemp();
         //sessionStorage.clear();
         relodpage();
         try {
@@ -117,16 +117,8 @@
     <div class="container">
 
     <div class="row" >
-      <div class="col-lg-3" id="alltextlist">
-          <h2 class="my-4" id="textlisttitle">文本區塊</h2>
-          <div class="list-group">
-            <a class="list-group-item active" id="row-text" value="1">第1區塊</a>
 
-          </div>
-        </div>
-    
-        <!-- /.col-lg-3 -->
-  <div id="textmenu">
+      <div id="textmenu">
       <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#inputModal" title="打開輸入界面">
         <span class="glyphicon glyphicon-book hidden-xs"></span>
         <span id="prog">輸入文本</span>       
@@ -140,6 +132,18 @@
         <span id="prog">預測文本</span>       
       </button>
     </div>
+
+    
+      <div class="col-lg-3" id="alltextlist">
+          <h2 class="my-4" id="textlisttitle">文本區塊</h2>
+          <div class="list-group">
+            <a class="list-group-item active" id="row-text" value="1">第1區塊</a>
+
+          </div>
+        </div>
+    
+        <!-- /.col-lg-3 -->
+  
         <div class="col-lg-9" >
           <!-- /.card -->
           
@@ -172,7 +176,7 @@
                 載入全部文本&nbsp;
         </h4>
         <div class="modal-body">
-            <textarea id="inputalltxt" class="form-control" placeholder="目前無內容……" ></textarea>
+            <textarea id="inputalltxt" class="form-control" placeholder="目前無內容……" rows="10"></textarea>
             <br>
         </div>
         <div class="modal-footer">

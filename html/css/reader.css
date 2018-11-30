@@ -29,6 +29,9 @@ body.dragged {
 
 #alltextlist{
     visibility:hidden; 
+    overflow: auto;
+    height: 40%;
+    margin-top: 5%;
 }
 
 #textmenu{
@@ -40,8 +43,8 @@ body.dragged {
     margin:auto;
 }
 
-#textlisttitle{
-    padding-top: 20%;
+#inputalltxt{
+
 }
 
 @media (min-width: 992px){
@@ -55,6 +58,12 @@ body.dragged {
         flex: 0 0 100%;
     }
 }
+
+#all-text{
+    min-height: 8em;
+
+}
+
 .charseg{
     display: inline-flex;
 
