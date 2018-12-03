@@ -219,7 +219,7 @@ function annosegment(){
                 .append("<div id='segline'></div>");
             $(this).find('#seg').find('#segline')
                 .css('border-width','1px')
-                .css('background-color','#FFFFFF')
+                .css('background-color','FFFFFF')
                 .css('z-index','0')
                 .css('width','90%')
                 .animate({width: '65%'});
@@ -239,15 +239,31 @@ function annosegment(){
         });
     });
     $(document).on('mouseleave', '.charseg', function(event){
-        $(this).find('#seg').find('#segline')
-        .css('background-color','#FFFFFF')
-        .animate({
-            borderWidth:'0px',
-            width: '0%'
-        });
-        $(this).find('#seg').animate({
-            width: '5px'
-        });
+        var segary = segmentcount();
+        var nowseg = $('div.charseg').index(this);
+        //console.log(nowseg);
+        if(segary[nowseg] == 0){
+            $(this).find('#seg').find('#segline')
+            .css('background-color','#FFFFFF')
+            //.css('background-color','rgba(255,255,255,0)')
+            .animate({
+                borderWidth:'0px',
+                width: '0%'
+            })
+            $(this).find('#seg').animate({
+                width: '5px'
+            });
+        }else if(segary[nowseg] == 1){
+            $(this).find('#seg').find('#segline')
+            .css('background-color','#FFFFFF')
+            //.css('background-color','rgba(255,255,255,0)')
+            .css('border-width','1px')
+            .css('width','65%')
+            .css('background-color','#CCEEFF');
+            $(this).find('#seg').animate({
+                width: '5px'
+            });
+        }
     });
 }
 
