@@ -94,7 +94,7 @@ def buildCrf(inputtext):
     print (datetime.datetime.now())
     print ("Start closed testing...")
     results = []
-        
+    print(traindata)
     while traindata:
         x, yref = traindata.pop()
         yout = tagger.tag(x)
@@ -287,6 +287,85 @@ def predic_api(inputtext):
     output = score + '<br>' + output
 
     #output = jsonify({'str': output})
+
+    return (out)
+
+#不確定抽樣 API用
+def predic_unscore_api(inputtext):
+    charstop = True # True means label attributes to previous char
+    features = 3 # 1=discrete; 2=vectors; 3=both
+    dictfile = 'vector/24scbow50.txt'
+    modelname = 'datalunyu5001.m'
+    vdict = util.readvec(dictfile)
+    inputtext = inputtext
+    #li = [line for line in util.text_to_lines(inputtext)]
+    li = util.text_to_lines(inputtext)
     
+    print(li)
+    data = []
+    for line in li:
+        x, y = util.line_toseq(line, charstop)
+        print(x)
+        if features == 1:
+            d = crf.x_seq_to_features_discrete(x, charstop), y
+        elif features == 2:
+            d = crf.x_seq_to_features_vector(x, vdict, charstop), y
+        elif features == 3:
+            d = crf.x_seq_to_features_both(x, vdict, charstop), y
+        data.append(d)
+    
+    tagger = pycrfsuite.Tagger()
+    tagger.open(modelname)
+    print ("Start testing...")
+    results = []
+    lines = []
+    Spp = []
+    Npp = []
+    out = []
+    #while data:
+    for index in range(len(data)):
+        print(len(data))
+        xseq, yref = data.pop(0)
+        yout = tagger.tag(xseq)
+        sp = 0
+        np = 0
+        for i in range(len(yout)):
+            sp = tagger.marginal('S',i)
+            Spp.append(sp) #S標記的機率
+            print(sp)
+            np = tagger.marginal('N',i) 
+            Npp.append(np)#Nㄅ標記的機率
+            print(np)
+        results.append(util.eval(yref, yout, "S"))
+        lines.append(util.seq_to_line([x['gs0'] for x in xseq],yout,charstop,Spp,Npp))
+        #print(util.seq_to_line([x['gs0'] for x in xseq], (str(sp) +'/'+ str(np)),charstop))
+        out.append(yout)
+        
+    
+    tp, fp, fn, tn = zip(*results)
+    tp, fp, fn, tn = sum(tp), sum(fp), sum(fn), sum(tn)
+    
+    p, r = tp/(tp+fp), tp/(tp+fn)
+    score = ''
+    score = score + '<br>' + "Total tokens in Test Set:" + repr(tp+fp+fn+tn)
+    score = score + '<br>' + "Total S in REF:" + repr(tp+fn)
+    score = score + '<br>' + "Total S in OUT:" + repr(tp+fp)
+    score = score + '<br>' + "Presicion:" + repr(p)
+    score = score + '<br>' + "Recall:" + repr(r)
+    score = score + '<br>' + "*******************F1-score:" + repr(2*p*r/(p+r))
+    
+    output = ''
+    print (lines)
+
+    for line in lines:
+        #line = unquote(line)
+        print ("output:")
+        print (line.encode('utf8'))
+        #output = output + '<br>' + line
+        output += line
+        print (line)
+    output = score + '<br>' + output
+
+    #output = jsonify({'str': output})
 
     return (out)

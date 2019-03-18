@@ -25,7 +25,7 @@ from flask_cors import CORS, cross_origin
 
 # 初始化 Flask 類別成為 instance
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 #cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 #app.config.from_object(DevConfig)
 tasks = [
@@ -68,6 +68,7 @@ def signUpUser():
 
 @app.route('/preseg', methods=['POST'])
 def preseg():
+    print('++__',request)
     text = request.form['input_text']    
     res = runcrf.predic_api(text)
     return json.dumps({'status':'OK','data':res});

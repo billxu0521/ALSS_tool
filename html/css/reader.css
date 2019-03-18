@@ -50,7 +50,7 @@ body.dragged {
 @media (min-width: 992px){
     .col-lg-3 {
         max-width: 15%;
-        position: fixed !important;
+        position: static !important;
     }
 }
 @media (min-width: 992px){
@@ -64,15 +64,17 @@ body.dragged {
 
 }
 
+
 .charseg{
     display: inline-flex;
-
+    cursor: pointer;
 }
 
 .charblock{
     /*display: inline-flex;*/
     margin-bottom:20px;
     position:relative;
+   
 }
 
 #all-text{
@@ -85,33 +87,30 @@ body.dragged {
     /*width: calc(100%/50);*/
 }
 
-.charseg{
-  cursor: pointer;
-  
+#char{
+    margin-left: 0px;
+    margin-right: 13px;
+
 }
 
-#char{
-  padding-left: 3px;
-}
 
 #char:hover{
     background: #DDDDDD;
 }
 
 #seg{
+    right: 15px;
     width: 5px;
     z-index:1;
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0);
 }
 
 #segline{
     position: absolute;
     border-style:dashed;
     border-width:0px;
-    padding-right: 1%;
     padding-left: 5px;
-    right: 5px;
-    left: 5px;
+    right: 15px;
     top:15%;
     width: 0%;
     height:75%;
