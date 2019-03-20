@@ -68,10 +68,13 @@ def signUpUser():
 
 @app.route('/preseg', methods=['POST'])
 def preseg():
-    print('++__',request)
-    text = request.form['input_text']    
-    res = runcrf.predic_api(text)
-    return json.dumps({'status':'OK','data':res});
+        
+    text = request.form['input_text'] 
+    print(text)
+    #res = runcrf.predic_api(text)
+    score = [0.6,0.4,1.2,1.1,0.7,0.9]
+    #return json.dumps({'status':'OK','data':res});
+    return json.dumps({'status':'OK','data':score});
 
 #建立CRF的接口
 @app.route('/buildcrfmodel', methods=['POST'])

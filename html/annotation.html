@@ -38,11 +38,10 @@
 
         //saveLocalData(1,"軒,轅之,時神農氏世衰諸侯相侵伐暴虐百,姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居");
         //saveLocalData(2,"東至于海登丸山及岱宗西至于空桐登雞頭南至于江登熊湘北逐葷粥合符釜山而邑于涿鹿之阿遷徙往來無常處以師兵為營衛官名皆以雲命為雲師置左右大監監于萬國萬國和而鬼神山川封禪與為多焉獲寶鼎迎日推筴舉風后力牧常先大鴻以治民順天地之紀幽明之占死生之說存亡之難時播百穀草木淳化鳥獸蟲蛾旁羅日月星辰水波土石金玉勞勤心力耳目節用水火材物有土德之瑞故號黃帝");
-        loadAllTextData();
 
         //saveLocalDataTemp();
         //sessionStorage.clear();
-        relodpage();
+        changepage();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -137,7 +136,7 @@
         <div>第二回合</div>
           <h2 class="my-4" id="textlisttitle">文本區塊</h2>
           <div class="list-group">
-            <a class="list-group-item active" id="row-text" value="1">第1區塊</a>
+            <a class="list-group-item active" id="row-text" key =1 value=0>第1區塊</a>
 
           </div>
         </div>

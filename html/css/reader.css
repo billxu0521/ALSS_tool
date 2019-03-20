@@ -204,5 +204,9 @@ body.dragged {
 @media (min-width: 992px){
 .col-lg-9{
     max-width: 100% !important;
+    }
 }
+.list-group-item.disabled, .list-group-item:disabled {
+    color: #6c757d !important;
+    background-color: #fff;
 }
