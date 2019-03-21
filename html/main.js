@@ -68,7 +68,7 @@ function loadAllTextData(){
     textlist = loadLocalList();
     console.log(textlist);
     all_obj = new Object;;
-    for(var i = 0;i < textlist.length;i++){
+    for(var i = 1;i <= textlist.length;i++){
         _json_obj = loadLocalData(i);
         _obj = (JSON.parse(_json_obj));
         all_obj[i] = _obj;
@@ -122,7 +122,7 @@ function loadall() {
     rowtext = (JSON.parse(obj)).text;
     serary = (JSON.parse(obj)).seg;
     load(rowtext,serary);
-
+    relodpage('a[key="1"]');
     $('#mainshowtext').css('visibility','visible');
     $('#alltextlist').css('visibility','visible');
     $('#textmenu').css('visibility','visible');
@@ -391,11 +391,15 @@ function buildModel(){
 function sendtext(){
     $(document).on('click', 'button[name="sendtext"]', function(event){
         //console.log($('textarea#outputtxt'));
-        textlist = loadLocalList();
-        alltext = loadAllTextData();//讀取全部文本
         //這邊需要一個偵測現在的文本區塊
         var num = $('.list-group-item.active').attr('key');
         num = parseInt(num);
+        var alltxt = getpagetext("div.charblock");
+        saveLocalData(num,alltxt);
+        textlist = loadLocalList();
+        alltext = loadAllTextData();//讀取全部文本
+        console.log(alltext);
+        
         textlist[num-1] = 1;
         saveLocalList(textlist);
 
@@ -405,13 +409,15 @@ function sendtext(){
         var testary = new Object;
 
         for(var i in textlist){
+            a = parseInt(i) + 1;
+            console.log(a);
             if(textlist[i] == 0){
                 //這邊是測試資料
-                testary[i] = alltext[i]
+                testary[i] = alltext[a]
                 //alldata['testdata'] = alltext[i]
             }else{
                 //這邊是訓練資料
-                trainary[i] = alltext[i];
+                trainary[i] = alltext[a];
                 //alldata['traindata'] = alltext[i]
             }
         }
@@ -419,7 +425,7 @@ function sendtext(){
         alldata['traindata'] = trainary;
         console.log(alldata);
         $.ajax({
-            url: 'http://localhost:5000/preseg',
+            url: 'http://localhost:5000/trainAndpredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
@@ -427,11 +433,16 @@ function sendtext(){
                 obj = JSON.parse(response);
                 //console.log(decodeURIComponent(obj.data));
                 res = decodeURIComponent(obj.data);
-                var resary = res.split(",");
-                resary.shift();
-                console.log(resary);
+                //var resary = res.split(",");
+                //resary.shift();
+                console.log(obj.data);
+                scoreary = obj.data;
+                if(scoreary.length == 1){
+                    alert('文本全部結束');
+                    return;
+                }
                 //處理排行
-                var topkey = scoreRank(resary);
+                var topkey = scoreRank(scoreary);
                 //showseg(resary);
                 //更改畫面
                 setCommanText(num,topkey);
@@ -467,7 +478,7 @@ function setCommanText(key,topkey){
     topkey = topkey+1
     console.log(topkey);
     relodpage('a[key="'+topkey+'"]');
-    $('a[key="'+key+'"]').removeClass('active').addClass('disabled');
+    //$('a[key="'+key+'"]').removeClass('active').addClass('disabled');
 }
 
 //讀取頁面資料
@@ -479,11 +490,11 @@ function getpagetext(selector){
 
 //按鍵換頁
 function relodpage(selector){
-var alltxt = getpagetext("div.charblock");
+    var alltxt = getpagetext("div.charblock");
     var num = $('.list-group-item.active').attr('key') ;
     saveLocalData(num,alltxt);
-    $(selector).siblings().removeClass('active');
-    $(selector).addClass('active');
+    $('.list-group-item').siblings().removeClass('active').addClass('disabled');
+    $(selector).removeClass('disabled').addClass('active');
 
     var part = $(selector).attr('key') ;
     obj = sessionStorage.getItem(part);

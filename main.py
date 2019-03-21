@@ -10,6 +10,7 @@ import glob
 import random
 import pycrfsuite
 import crf
+import crfmodel
 import util
 import datetime
 import json
@@ -75,6 +76,13 @@ def preseg():
     score = [0.6,0.4,1.2,1.1,0.7,0.9]
     #return json.dumps({'status':'OK','data':res});
     return json.dumps({'status':'OK','data':score});
+
+@app.route('/trainAndpredic_api', methods=['POST'])
+def trainAndpredic():
+    text = request.form['input_text']
+    res = crfmodel.trainAndpredic_api(text)
+    #return json.dumps({'status':'OK','data':res});
+    return json.dumps({'status':'OK','data':res});
 
 #建立CRF的接口
 @app.route('/buildcrfmodel', methods=['POST'])
