@@ -1,0 +1,13 @@
+click==6.7
+Flask==1.0.2
+Flask-SQLAlchemy==2.1
+Flask-Migrate==2.0.3
+gunicorn==19.6.0
+itsdangerous==0.24
+Jinja2==2.9.5
+MarkupSafe==0.23
+Werkzeug==0.11.15
+cffi==1.10.0
+numpy==1.15.4
+python-crfsuite==0.9.6
+Flask-Cors==3.0.7
