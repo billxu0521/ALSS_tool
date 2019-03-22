@@ -444,6 +444,7 @@ function sendtext(){
                 //處理排行
                 var topkey = scoreRank(scoreary);
                 //showseg(resary);
+                showTextScore(scoreary[topkey][1])
                 //更改畫面
                 setCommanText(num,topkey);
             },
@@ -464,9 +465,7 @@ function scoreRank(ary){
     _ary = _ary.sort(function (a, b) {
         return a.value > b.value ? -1 : 1;
     });
-    console.log(_ary);
     var top = _ary[0].key;
-    console.log(top);
     return top
 }
 
@@ -476,7 +475,6 @@ function setCommanText(key,topkey){
     console.log('change');
     topkey = parseInt(topkey);
     topkey = topkey+1
-    console.log(topkey);
     relodpage('a[key="'+topkey+'"]');
     //$('a[key="'+key+'"]').removeClass('active').addClass('disabled');
 }
@@ -486,6 +484,25 @@ function getpagetext(selector){
     var alltxt =$(selector).toArray();
     var text = calalltext(alltxt);
     return text;
+}
+//取小數n為
+function roundFun(value, n) {
+
+    return Math.round(value*Math.pow(10,n))/Math.pow(10,n);
+};
+
+//顯示不確定抽樣分數資訊
+function showTextScore(score){
+    console.log(score);
+    var n = 2;
+    var _score = roundFun(score,n)
+    console.log(_score);
+    $('#text_score').html(_score);
+}
+
+//顯示字數資訊
+function showTextCount(count){
+    $('#text_count').html(count);
 }
 
 //按鍵換頁
@@ -501,7 +518,7 @@ function relodpage(selector){
     rowtext = (JSON.parse(obj)).text;
     serary = (JSON.parse(obj)).seg;
     load(rowtext,serary);
-
+    showTextCount(rowtext.length);
 }
 
 
