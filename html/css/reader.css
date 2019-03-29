@@ -11,6 +11,10 @@ body.dragged {
             margin-bottom: 1em;
         }
 
+#text_container{
+    position: static;
+}
+
 #container {
     padding: 7em 1em 7em 1em;
     font-family: '微軟黑體' !important;
@@ -23,6 +27,7 @@ body.dragged {
     box-shadow: 0 0 25px rgba(0,0,0,.25);
 }
 
+
 #mainshowtext{
     visibility:hidden;
 }
@@ -31,11 +36,11 @@ body.dragged {
     visibility:hidden; 
     overflow: auto;
     height: 40%;
-    margin-top: 5%;
 }
 
 #textmenu{
     visibility:hidden; 
+    position: relative;
 }
 
 .custombtn{
@@ -147,8 +152,16 @@ body.dragged {
 
 #txtbtn {
     position: relative;
-    top: 10px; right: 10px;
 }
+
+.btndiv{
+    padding: 13% 3% 3% 3%;
+}
+
+#savetextbtn{
+    position: relative; 
+}
+
 #infobar {
     font-family: Consolas, monospace;
     position: fixed;
@@ -203,7 +216,7 @@ body.dragged {
 
 @media (min-width: 992px){
 .col-lg-9{
-    max-width: 100% !important;
+    max-width: 80% !important;
     }
 }
 .list-group-item.disabled, .list-group-item:disabled {

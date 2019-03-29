@@ -27,6 +27,7 @@
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="main.js"></script>
+    <script src="vendor/FileSaver.js"></script>
 
     <script>
       $(function() {
@@ -35,10 +36,8 @@
         showinport();
         sendtext();
         buildModel();
-
-        //saveLocalData(1,"軒,轅之,時神農氏世衰諸侯相侵伐暴虐百,姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居");
-        //saveLocalData(2,"東至于海登丸山及岱宗西至于空桐登雞頭南至于江登熊湘北逐葷粥合符釜山而邑于涿鹿之阿遷徙往來無常處以師兵為營衛官名皆以雲命為雲師置左右大監監于萬國萬國和而鬼神山川封禪與為多焉獲寶鼎迎日推筴舉風后力牧常先大鴻以治民順天地之紀幽明之占死生之說存亡之難時播百穀草木淳化鳥獸蟲蛾旁羅日月星辰水波土石金玉勞勤心力耳目節用水火材物有土德之瑞故號黃帝");
-
+        outputText();
+        
         //saveLocalDataTemp();
         //sessionStorage.clear();
         
@@ -118,7 +117,7 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container-fluid">
 
     <div class="row" >
 
@@ -133,7 +132,7 @@
       
     
       <div class="col-lg-3" id="alltextlist">
-        <div>第二回合</div>
+        <div>第<a id="round">1</a>回合</div>
           <h2 class="my-4" id="textlisttitle">文本區塊</h2>
           <div id="text_inf">文本資訊
             <div>字數：<div id="text_count">--</div></div>
@@ -143,19 +142,21 @@
             <a class="list-group-item active" id="row-text" key =1 value=0>第1區塊</a>
 
           </div>
-        </div>
-    
-        <!-- /.col-lg-3 -->
-  
-        <div class="col-lg-9" >
+        </div>  
+        <div class="col-lg" id="text_container">
           <!-- /.card -->
-          
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">使用者</span>
+            </div>
+            <input type="text" id="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+
           <div class="card card-outline-secondary my-4">
             <button type="button" id="txtbtn" class="custombtn" data-toggle="modal" data-target="#inputAllModal" title="打開輸出界面">
             <span id="prog">載入全部文本</span>       
             </button> 
-            
-
+          
             <div class="card-header" id="mainshowtext">
               文本顯示區
             </div>
@@ -163,7 +164,6 @@
             <!--文字設定視窗-->
             <div class="card-body" onscroll="calc()">
               <div id="all-text">
-                
               </div>
             </div>
 
@@ -255,16 +255,20 @@
         </div>
         </div></div></div>
         </div>
-          
-          <!-- /.card -->
-
         </div>
-        <!-- /.col-lg-9 -->
-         <div id="textmenu">
+        <div class="col-lg-1" id="textmenu">
+          <div class="btndiv">
             <button type="button" id="txtbtn" name="sendtext" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-book hidden-xs"></span>
-              <span id="prog">預測文本</span>       
+            <span class="glyphicon glyphicon-book hidden-xs"></span>
+            <span id="prog">預測文本</span>       
             </button>
+          </div>
+            <div class="btndiv">
+              <button type="button" id="savetextbtn" name="savetext" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-book hidden-xs"></span>
+                <span id="prog">儲存結果</span>       
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -27,6 +27,25 @@ function saveLocalDataTemp(){
     sessionStorage.setItem('1',JSON.stringify(obj));
 }
 
+//本地儲存資料到local
+function saveLocalStorage(user,data){
+    console.log('Loacl-SAVE');
+    localStorage.setItem(user,JSON.stringify(data));
+}
+
+//
+function creatUserName(){
+    var user = $('#username').val();
+    localStorage.setItem('username',user);
+    console.log('Creat User:' + user);
+}
+
+function saveAllLocalStorage(){
+    var user = localStorage.getItem('username');
+    var alldata = loadAllTextData();
+    console.log('SAVE' + user + ':' + alldata);
+    saveLocalStorage(user,alldata);
+}
 
 //本地儲存資料到session
 function saveLocalData(num,data){
@@ -112,7 +131,7 @@ function loadall() {
             continue;
         }else{
             var menubtn = $('<a></a>');
-            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:???' );
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
             $('.list-group').append(menubtn);
             textindex.push(0);
         }
@@ -123,6 +142,7 @@ function loadall() {
     serary = (JSON.parse(obj)).seg;
     load(rowtext,serary);
     relodpage('a[key="1"]');
+    creatUserName();
     $('#mainshowtext').css('visibility','visible');
     $('#alltextlist').css('visibility','visible');
     $('#textmenu').css('visibility','visible');
@@ -316,7 +336,7 @@ function annosegment(){
             //.css('background-color','rgba(255,255,255,0)')
             .css('border-width','1px')
             .css('width','65%')
-            .css('background-color','#CCEEFF');
+            .css('background-color','#66FF66');
             $(this).parent('.charseg').find('#seg').animate({
                 width: '5px'
             });
@@ -443,10 +463,15 @@ function sendtext(){
                 }
                 //處理排行
                 var topkey = scoreRank(scoreary);
+                //更動選單內資訊
+                setTextMenu(scoreary);
                 //showseg(resary);
                 showTextScore(scoreary[topkey][1])
                 //更改畫面
                 setCommanText(num,topkey);
+                //存擋
+                saveAllLocalStorage();
+                
             },
             error: function(error) {
                 console.log(error);
@@ -455,12 +480,20 @@ function sendtext(){
     });
 }
 
-
+function setTextMenu(ary){
+    $('.list-group-item #u_score').text('--');
+    for(var i in ary){
+        console.log(ary[i][0]);
+        _x = (parseInt(ary[i][0]) + 1);
+        _score = roundFun(ary[i][1]);
+        $('a[key="'+ _x +'"] #u_score').text(_score);
+    }
+}
 //處理不確定採樣排行
 function scoreRank(ary){
     var _ary = [];
     for(var i in ary){
-        _ary.push({'key':i,'value':ary[i]});
+        _ary.push({'key':parseInt(i) +1,'value':ary[i][1]});
     }
     _ary = _ary.sort(function (a, b) {
         return a.value > b.value ? -1 : 1;
@@ -469,12 +502,20 @@ function scoreRank(ary){
     return top
 }
 
-
 //根據排行調整畫面
 function setCommanText(key,topkey){
     console.log('change');
     topkey = parseInt(topkey);
     topkey = topkey+1
+    var  _list= loadLocalList();
+    var checkround = 0;
+    for(var i in _list){
+        if(_list[i] == 1){
+            checkround ++;
+        }
+    }
+    console.log(checkround);
+    $('#round').html((parseInt(checkround) + 1));
     relodpage('a[key="'+topkey+'"]');
     //$('a[key="'+key+'"]').removeClass('active').addClass('disabled');
 }
@@ -487,15 +528,13 @@ function getpagetext(selector){
 }
 //取小數n為
 function roundFun(value, n) {
-
-    return Math.round(value*Math.pow(10,n))/Math.pow(10,n);
+    return Math.round(value * 1000) / 1000 // 18.63
 };
 
 //顯示不確定抽樣分數資訊
 function showTextScore(score){
     console.log(score);
-    var n = 2;
-    var _score = roundFun(score,n)
+    var _score = roundFun(score)
     console.log(_score);
     $('#text_score').html(_score);
 }
@@ -536,3 +575,19 @@ function changepage(){
 function getRandom(min,max){
         return Math.floor(Math.random()*(max-min+1)/10)+min;
     };
+
+function outputText(){
+    $(document).on('click', '#savetextbtn', function(event){
+        console.log('SAVE');
+        var txtFile = "test.txt";
+        var user = $('#username').val();
+        
+        var content = localStorage.getItem(user);
+        // any kind of extension (.txt,.cpp,.cs,.bat)
+        
+        var blob = new Blob([content], {
+         type: "text/plain;charset=utf-8"
+        });
+        saveAs(blob, txtFile);
+    });
+}
