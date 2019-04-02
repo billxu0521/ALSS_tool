@@ -161,6 +161,8 @@ def trainAndpredic_api(inputtext):
         for a in range(start,end):
             text_count = text_obj[testidx[i]][0]
             U_score += score_array[a]
+        print('text_count:',text_count)
+        print('U_score:',U_score)
         U_score = U_score / text_count
         text_obj[testidx[i]][1] = U_score
         All_u_score += U_score
