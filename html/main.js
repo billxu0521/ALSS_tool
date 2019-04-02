@@ -12,21 +12,6 @@ function gettime() {
     return time;
 }
 
-TEXT = "至虛之中泱儿無垠而萬有實之實居於虛之中寥漠無際一氣虛之非虛則物不能變化周流若無所容以神其機而實者有訕信聚散存焉非實則氣之綑組闔闢若無所馮以藏其用而虛者有升降消長擊焉夫天地之大以太虛為體而萬物生生化化於兩問而不息者一陰一陽動靜往來而已矣--凡寒暑之變晝夜之殊天之運而不息者昭而日星威而雷霆潤而風雨霜露地之運而不息者峙而山嶽流而江海蕃而草木烏獸若洪鐵高下之眾肖翹蚊動之微一皆囿於至虛之中而不可測其幽微神妙者所謂道也理也非道之大理之精其能宰乎至神至妙之機也乎--是所以範圍天地發育萬物以盡夫參贊之道者焉故知道者不觀於物而觀乎心也蓋心統性情而理具於心氣囿於形皆天命流行而賦焉曰虛靈日太極日中日一皆心之本然也是日心為太極也物物皆具是性焉凡物之形色紛錯音聲鏗戛皆有無混融之不齊--至虛之中泱儿無垠而萬有實之實居於虛之中寥漠無際一氣虛之非虛則物不能變化周流若無所容以神其機而實者有訕信聚散存焉非實則氣之綑組闔闢若無所馮以藏其用而虛者有升降消長擊焉夫天地之大以太虛為體而萬物生生化化於兩問而不息者一陰一陽動靜往來而已矣--凡寒暑之變晝夜之殊天之運而不息者昭而日星威而雷霆潤而風雨霜露地之運而不息者峙而山嶽流而江海蕃而草木烏獸若洪鐵高下之眾肖翹蚊動之微一皆囿於至虛之中而不可測其幽微神妙者所謂道也理也非道之大理之精其能宰乎至神至妙之機也乎--是所以範圍天地發育萬物以盡夫參贊之道者焉故知道者不觀於物而觀乎心也蓋心統性情而理具於心氣囿於形皆天命流行而賦焉曰虛靈日太極日中日一皆心之本然也是日心為太極也物物皆具是性焉凡物之形色紛錯音聲鏗戛皆有無混融之不齊"
-
-//本地儲存資料session temp
-function saveLocalDataTemp(){
-    sessionStorage.setItem("text-1","軒,轅之,時神農氏世衰諸侯相侵伐暴虐百,姓而神農氏弗能征於是軒轅乃習用干戈以征不享諸侯咸來賓從而蚩尤最為暴莫能伐炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵治五氣藝五種撫萬民度四方教熊羆貔貅貙虎以與炎帝戰於阪泉之野三戰然後得其志蚩尤作亂不用帝命於是黃帝乃徵師諸侯與蚩尤戰於涿鹿之野遂禽殺蚩尤而諸侯咸尊軒轅為天子代神農氏是為黃帝天下有不順者黃帝從而征之平者去之披山通道未嘗寧居"); //儲存資料，方法3
-    sessionStorage.setItem("text-2","東至于海登丸山及岱宗西至于空桐登雞頭南至于江登熊湘北逐葷粥合符釜山而邑于涿鹿之阿遷徙往來無常處以師兵為營衛官名皆以雲命為雲師置左右大監監于萬國萬國和而鬼神山川封禪與為多焉獲寶鼎迎日推筴舉風后力牧常先大鴻以治民順天地之紀幽明之占死生之說存亡之難時播百穀草木淳化鳥獸蟲蛾旁羅日月星辰水波土石金玉勞勤心力耳目節用水火材物有土德之瑞故號黃帝"); //儲存資料，方法3
-    
-    //sessionStorage.removeItem("test1"); //刪除key值為test1這筆資料
-    //sessionStorage.clear(); //刪除localStorage裡所有資料
-    row_text = sessionStorage.getItem("text-1");
-    obj = calsegary(row_text);
-    console.log(obj);
-    sessionStorage.setItem('1',JSON.stringify(obj));
-}
-
 //本地儲存資料到local
 function saveLocalStorage(user,data){
     console.log('Loacl-SAVE');
@@ -195,7 +180,7 @@ function load(row_text=null,ser_ary=null) {
                     }
                     var char_seg = $("<div></div>")
                         .addClass('charseg')
-                        .attr('title','請點擊進行標註')
+                        //.attr('title','請點擊進行標註')
                         .append(char_block)
                         .append(seg_block);
                     $("#all-text")
@@ -205,7 +190,7 @@ function load(row_text=null,ser_ary=null) {
                 //container.appendChild(elem);
         }
     	calc();
-    $('.charseg').tooltip();
+    //$('.charseg').tooltip();
 	$('#inputModal').modal('hide');
 }
 
@@ -278,6 +263,7 @@ function annosegment(){
             $(this).find('#seg').find('#segline')
                 .css('border-width','1px')
                 .css('width','90%')
+                .css('z-index','-1')
                 .css('background-color','#CCEEFF')
                 .animate({
                     right: '5px',
@@ -285,19 +271,19 @@ function annosegment(){
                 });
         }else if(segary[nowseg] == 1){
             $(this).find('#seg')
-                .text('　')
+                .text('')
                 .css('right',5)
                 .css('padding-right',0)
                 .css('padding-left',0)
                 .append("<div id='segline'></div>");
             $(this).find('#seg').find('#segline')
-                .css('border-width','1px')
+                .css('border-width','0px')
                 .css('background-color','FFFFFF')
-                .css('z-index','0')
+                .css('z-index','-1')
                 .css('width','90%')
                 .animate({
-                    right: '5px',
-                    width: '65%'
+                    right: '0px',
+                    width: '0%'
                 });
         }
         var segary = segmentcount();
@@ -305,13 +291,13 @@ function annosegment(){
         //console.log(time + "////回傳斷句" + segary);
     });
     $(document).on('mouseenter', '#char', function(event){
-        $(this).parent('.charseg').find('#seg').find('#segline')
+        $(this).parent('charseg').find('#seg').find('#segline')
         .animate({
             right: '5px',
             borderWidth:'1px',
             width: '65%'
         });
-        $(this).parent('.charseg').find('#seg').animate({     
+        $(this).parent('charseg').find('#seg').animate({     
             width: '30px'
         });
     });
@@ -320,24 +306,24 @@ function annosegment(){
         var nowseg = $('div#char').index(this);
         //console.log(nowseg);
         if(segary[nowseg] == 0){
-            $(this).parent('.charseg').find('#seg').find('#segline')
+            $(this).parent('charseg').find('#seg').find('#segline')
             .css('background-color','rgba(255, 0, 0, 0)')
             //.css('background-color','rgba(255,255,255,0)')
             .animate({
                 borderWidth:'0px',
                 width: '0%'
             })
-            $(this).parent('.charseg').find('#seg').animate({
+            $(this).parent('charseg').find('#seg').animate({
                 width: '5px'
             });
         }else if(segary[nowseg] == 1){
-            $(this).parent('.charseg').find('#seg').find('#segline')
+            $(this).parent('charseg').find('#seg').find('#segline')
             .css('background-color','rgba(255, 0, 0, 0)')
             //.css('background-color','rgba(255,255,255,0)')
             .css('border-width','1px')
             .css('width','65%')
             .css('background-color','#66FF66');
-            $(this).parent('.charseg').find('#seg').animate({
+            $(this).parent('charseg').find('#seg').animate({
                 width: '5px'
             });
         }
