@@ -72,7 +72,7 @@ def trainAndpredic_api(inputtext):
     #material = "data/sjw/A05*"
     filename = 'model'
     charstop = True # True means label attributes to previous char
-    crfmethod = "l2sgd"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
+    crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
     traindata = dataconvert(rawalldata['traindata'])
@@ -86,14 +86,15 @@ def trainAndpredic_api(inputtext):
     for i in rawalldata['testdata']:        
         testidx.append(i)
         text_obj[i]=([len(rawalldata['testdata'][i]['text']),0])
-        print(text_obj)
+        
     for i in rawalldata['traindata']:        
         trainidx.append(i)
-    
+    print('info:',text_obj)
     print (datetime.datetime.now())
     modelname = filename.replace('/','').replace('*','')+str(charstop)+".m"
     print(modelname)
     trainer = pycrfsuite.Trainer()
+    #trainer.clear() 
     #print trainer.params()
     #print(traindata[0])
     for t in traindata:
@@ -101,7 +102,7 @@ def trainAndpredic_api(inputtext):
         trainer.append(x, y)
     
     trainer.select(crfmethod)#做訓練
-    trainer.set('max_iterations',10) #測試迴圈
+    trainer.set('max_iterations',30) #測試迴圈
     trainer.train(modelname)
     
     tagger = pycrfsuite.Tagger()
@@ -187,4 +188,5 @@ def trainAndpredic_api(inputtext):
     print ("Recall:", r)
     print ("F1-score:", f_score)
     print(text_score)
+    
     return text_score
