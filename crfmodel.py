@@ -86,7 +86,7 @@ def trainAndpredic_api(inputtext):
     for i in rawalldata['testdata']:        
         testidx.append(i)
         text_obj[i]=([len(rawalldata['testdata'][i]['text']),0])
-        
+        print(text_obj)
     for i in rawalldata['traindata']:        
         trainidx.append(i)
     
