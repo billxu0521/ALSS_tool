@@ -117,7 +117,7 @@ function loadall() {
         }else{
             var menubtn = $('<a></a>');
             //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
-            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊');
             $('.list-group').append(menubtn);
             textindex.push(0);
         }
@@ -279,13 +279,12 @@ function annosegment(){
                 .css('padding-left',0)
                 .append("<div id='segline'></div>");
             $(this).find('#seg').find('#segline')
-                .css('border-width','0px')
+                .css('border-width','1px')
                 .css('background-color','FFFFFF')
                 .css('z-index','-1')
-                .css('width','90%')
                 .animate({
-                    right: '0px',
-                    width: '0%'
+                    right: '5px',
+                    width: '65%'
                 });
         }
         var segary = segmentcount();
@@ -293,14 +292,18 @@ function annosegment(){
         //console.log(time + "////回傳斷句" + segary);
     });
     $(document).on('mouseenter', '#char', function(event){
-        $(this).parent('charseg').find('#seg').find('#segline')
+        $(this).parent('.charseg').find('#seg').find('#segline')
         .animate({
             right: '5px',
             borderWidth:'1px',
             width: '65%'
         });
-        $(this).parent('charseg').find('#seg').animate({     
+        $(this).parent('.charseg').find('#seg').animate({     
+            paddingRight:'15px',
+            paddingLeft:'10px',
+            right: '5px',
             width: '30px'
+
         });
     });
     $(document).on('mouseleave', '#char', function(event){
@@ -308,25 +311,27 @@ function annosegment(){
         var nowseg = $('div#char').index(this);
         //console.log(nowseg);
         if(segary[nowseg] == 0){
-            $(this).parent('charseg').find('#seg').find('#segline')
+            $(this).parent('.charseg').find('#seg').find('#segline')
             .css('background-color','rgba(255, 0, 0, 0)')
             //.css('background-color','rgba(255,255,255,0)')
             .animate({
                 borderWidth:'0px',
                 width: '0%'
             })
-            $(this).parent('charseg').find('#seg').animate({
-                width: '5px'
+            $(this).parent('.charseg').find('#seg').animate({
+                paddingRight:'5px',
+                paddingLeft:'0px',
+                width: '0px'
             });
         }else if(segary[nowseg] == 1){
-            $(this).parent('charseg').find('#seg').find('#segline')
-            .css('background-color','rgba(255, 0, 0, 0)')
+            $(this).parent('.charseg').find('#seg').find('#segline')
             //.css('background-color','rgba(255,255,255,0)')
-            .css('border-width','1px')
-            .css('width','65%')
-            .css('background-color','#66FF66');
-            $(this).parent('charseg').find('#seg').animate({
-                width: '5px'
+            .css('border-width','0px')
+            .css('width','0%')
+            $(this).parent('.charseg').find('#seg').animate({
+                paddingRight:'5px',
+                paddingLeft:'0px',
+                width: '0px'
             });
         }
     });

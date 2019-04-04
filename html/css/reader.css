@@ -72,6 +72,8 @@ body.dragged {
 .charseg{
     display: inline-flex;
     cursor: pointer;
+    padding-right: 1%;
+    padding-left: 1%;
 }
 
 .charblock{
@@ -110,17 +112,20 @@ body.dragged {
     width: 5px;
     z-index:1;
     background-color: rgba(255,255,255,0);
+    padding-right:5px;
 }
 
 #segline{
     position: absolute;
     border-style:dashed;
     border-width:0px;
+    
     padding-left: 0px;
     right: 5px;
     top:15%;
     height:75%;
     z-index: -1;
+    width: '65%'
 }
 
 #container>p {
