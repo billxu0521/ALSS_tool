@@ -53,6 +53,7 @@
             update();
           });
         } catch(_) {}
+        textprogressbar();
         annosegment();//啟動標註
         gettime();
         setInterval(gettime,1000);
@@ -161,7 +162,14 @@
             <div class="card-header" id="mainshowtext">
               文本顯示區
             </div>
-
+            <progress value="0" max="0">
+            <!-- Older browsers look to the old div style of progress bars -->
+            <!-- Newer browsers ignore this stuff but it allows older browsers to 
+                    still have a progress bar. -->
+            <div class="progress-container">
+                <span class="progress-bar"></span>    
+            </div>
+            </progress>
             <!--文字設定視窗-->
             <div class="card-body" onscroll="calc()">
               <div id="all-text">

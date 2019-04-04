@@ -116,7 +116,8 @@ function loadall() {
             continue;
         }else{
             var menubtn = $('<a></a>');
-            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0');
             $('.list-group').append(menubtn);
             textindex.push(0);
         }
@@ -192,6 +193,7 @@ function load(row_text=null,ser_ary=null) {
     	calc();
     //$('.charseg').tooltip();
 	$('#inputModal').modal('hide');
+    textprogressbar();
 }
 
 //整理顯示和標注的文本
@@ -443,20 +445,21 @@ function sendtext(){
                 res = decodeURIComponent(obj.data);
                 //var resary = res.split(",");
                 //resary.shift();
-                console.log(obj.data);
                 scoreary = obj.data;
-                if(scoreary.length == 1){
+                console.log(scoreary);
+                if(scoreary.length == 0){
                     alert('文本全部結束');
                     return;
                 }
                 //處理排行
                 var topkey = scoreRank(scoreary);
+                console.log('top:'+topkey.key);
                 //更動選單內資訊
                 setTextMenu(scoreary);
                 //showseg(resary);
-                showTextScore(scoreary[topkey][1])
+                showTextScore(topkey.value)
                 //更改畫面
-                setCommanText(num,topkey);
+                setCommanText(num,topkey.key);
                 //存擋
                 saveAllLocalStorage();
                 
@@ -471,7 +474,6 @@ function sendtext(){
 function setTextMenu(ary){
     $('.list-group-item #u_score').text('--');
     for(var i in ary){
-        console.log(ary[i][0]);
         _x = (parseInt(ary[i][0]) + 1);
         _score = roundFun(ary[i][1]);
         $('a[key="'+ _x +'"] #u_score').text(_score);
@@ -481,12 +483,15 @@ function setTextMenu(ary){
 function scoreRank(ary){
     var _ary = [];
     for(var i in ary){
-        _ary.push({'key':parseInt(i) +1,'value':ary[i][1]});
+        console.log(ary[i]);
+        _ary.push({'key':ary[i][0],'value':ary[i][1]});
     }
+    console.log(_ary);
     _ary = _ary.sort(function (a, b) {
         return a.value > b.value ? -1 : 1;
     });
-    var top = _ary[0].key;
+    var top = _ary[0];
+    console.log(top);
     return top
 }
 
@@ -516,7 +521,7 @@ function getpagetext(selector){
 }
 //取小數n為
 function roundFun(value, n) {
-    return Math.round(value * 1000) / 1000 // 18.63
+    return Math.round(value * 100000) / 100000 // 18.63
 };
 
 //顯示不確定抽樣分數資訊
@@ -578,4 +583,58 @@ function outputText(){
         });
         saveAs(blob, txtFile);
     });
+}
+
+function textprogressbar(){
+    var getMax = function() {
+        return $("#all-text").prop("scrollHeight") - $("#all-text").height();
+        //return $(document).height() - $(window).height();
+    }
+    var getValue = function() {
+        return $('#all-text').scrollTop();
+    }
+    if ('max' in document.createElement('progress')) {
+        var progressBar = $('progress');
+        progressBar.attr({
+            max: getMax()
+        });
+
+        $('#all-text').on('scroll', function() {
+            progressBar.attr({
+                value: getValue()
+            });
+            
+        });
+        $('#all-text').resize(function() { 
+            progressBar.attr({
+                max: getMax(),
+                value: getValue()
+            });
+        });
+    } else {
+        var progressBar = $('.progress-bar'),
+            max = getMax(),
+            value, width;
+
+        var getWidth = function() {
+            
+            value = getValue();
+            width = (value / max) * 100;
+            width = width + '%';
+            return width;
+        }
+
+        var setWidth = function() {
+            progressBar.css({
+                width: getWidth()
+            });
+        }
+
+        $(document).on('scroll', setWidth);
+        $(window).on('resize', function() {
+            
+            max = getMax();
+            setWidth();
+        });
+    }
 }
