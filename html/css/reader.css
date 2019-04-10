@@ -113,19 +113,21 @@ body.dragged {
     z-index:1;
     background-color: rgba(255,255,255,0);
     padding-right:5px;
+    padding-left:0px;
+
 }
 
 #segline{
     position: absolute;
     border-style:dashed;
     border-width:0px;
-    
     padding-left: 0px;
     right: 5px;
     top:15%;
     height:75%;
     z-index: -1;
-    width: '65%'
+    width: 65%;
+    border-color:#FF0000;
 }
 
 #container>p {

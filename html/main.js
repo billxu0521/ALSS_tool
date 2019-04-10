@@ -258,15 +258,13 @@ function annosegment(){
         if(segary[nowseg] == 0){
             $(this).find('#seg')
                 .text(',')
-                .css('padding-right',15)
-                .css('padding-left',10)
-                .css('right',5)
+                //.css('right',15)
                 .append("<div id='segline'></div>");
             $(this).find('#seg').find('#segline')
                 .css('border-width','1px')
-                .css('width','90%')
-                .css('z-index','-1')
-                .css('background-color','#CCEEFF')
+                //.css('width','90%')
+                //.css('z-index','-1')
+                //.css('background-color','#CCEEFF')
                 .animate({
                     right: '5px',
                     width: '65%'
@@ -275,13 +273,12 @@ function annosegment(){
             $(this).find('#seg')
                 .text('')
                 .css('right',5)
-                .css('padding-right',0)
-                .css('padding-left',0)
+                
                 .append("<div id='segline'></div>");
             $(this).find('#seg').find('#segline')
                 .css('border-width','1px')
-                .css('background-color','FFFFFF')
-                .css('z-index','-1')
+                //.css('background-color','FFFFFF')
+                //.css('z-index','-1')
                 .animate({
                     right: '5px',
                     width: '65%'
@@ -294,7 +291,6 @@ function annosegment(){
     $(document).on('mouseenter', '#char', function(event){
         $(this).parent('.charseg').find('#seg').find('#segline')
         .animate({
-            right: '5px',
             borderWidth:'1px',
             width: '65%'
         });
@@ -321,11 +317,13 @@ function annosegment(){
             $(this).parent('.charseg').find('#seg').animate({
                 paddingRight:'5px',
                 paddingLeft:'0px',
-                width: '0px'
+                width: '5px',
+                right:'15px'
             });
         }else if(segary[nowseg] == 1){
             $(this).parent('.charseg').find('#seg').find('#segline')
             //.css('background-color','rgba(255,255,255,0)')
+            //
             .css('border-width','0px')
             .css('width','0%')
             $(this).parent('.charseg').find('#seg').animate({
