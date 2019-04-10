@@ -112,8 +112,8 @@ body.dragged {
     width: 5px;
     z-index:1;
     background-color: rgba(255,255,255,0);
-    padding-right:5px;
-    padding-left:0px;
+    padding-right:10px;
+    padding-left:5px;
 
 }
 

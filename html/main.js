@@ -251,16 +251,17 @@ function calc() {
 
 //標註斷句符號的功能
 function annosegment(){
-    $(document).on('click', '.charseg', function(event){
+    $(document).on('click', '.charseg #char', function(event){
+        console.log('click');
         var segary = segmentcount();
-        var nowseg = $('div.charseg').index(this);
-        //console.log(nowseg);
+        var nowseg = $('div.charseg #char').index(this);
+        console.log(nowseg);
         if(segary[nowseg] == 0){
-            $(this).find('#seg')
+            $(this).parent('.charseg').find('#seg')
                 .text(',')
                 //.css('right',15)
                 .append("<div id='segline'></div>");
-            $(this).find('#seg').find('#segline')
+            $(this).parent('.charseg').find('#seg').find('#segline')
                 .css('border-width','1px')
                 //.css('width','90%')
                 //.css('z-index','-1')
@@ -270,12 +271,12 @@ function annosegment(){
                     width: '65%'
                 });
         }else if(segary[nowseg] == 1){
-            $(this).find('#seg')
+            $(this).parent('.charseg').find('#seg')
                 .text('')
                 .css('right',5)
                 
                 .append("<div id='segline'></div>");
-            $(this).find('#seg').find('#segline')
+            $(this).parent('.charseg').find('#seg').find('#segline')
                 .css('border-width','1px')
                 //.css('background-color','FFFFFF')
                 //.css('z-index','-1')
@@ -288,6 +289,38 @@ function annosegment(){
         var time = gettime();
         //console.log(time + "////回傳斷句" + segary);
     });
+
+    $(document).on('mouseenter', '#char', function(event){
+        $(this).parent('.charseg').find('#seg').find('#segline')
+        .css('border-width','1px')
+        .css('width','65%')
+      
+        $(this).parent('.charseg').find('#seg')
+        .css('padding-left','10px')
+        .css('padding-right','15px')
+        .css('right','5px')
+        .css('width','30px')
+
+        
+    });
+    $(document).on('mouseleave', '#char', function(event){
+        var segary = segmentcount();
+        var nowseg = $('div#char').index(this);
+        //console.log(nowseg);
+        $(this).parent('.charseg').find('#seg').find('#segline')
+        .css('border-width','0px')
+        .css('width','0px')
+        $(this).parent('.charseg').find('#seg')
+        .css('padding-left','5px')
+        .css('padding-right','10px')
+        .css('width','0px')
+        .css('right','15px')
+
+        
+    });
+
+
+    /*
     $(document).on('mouseenter', '#char', function(event){
         $(this).parent('.charseg').find('#seg').find('#segline')
         .animate({
@@ -302,6 +335,7 @@ function annosegment(){
 
         });
     });
+     
     $(document).on('mouseleave', '#char', function(event){
         var segary = segmentcount();
         var nowseg = $('div#char').index(this);
@@ -333,6 +367,7 @@ function annosegment(){
             });
         }
     });
+    */
 }
 
 //計算標註陣列
@@ -462,9 +497,12 @@ function sendtext(){
                 //showseg(resary);
                 showTextScore(topkey.value)
                 //更改畫面
-                setCommanText(num,topkey.key);
+                var round = setCommanText(num,topkey.key);
                 //存擋
                 saveAllLocalStorage();
+                //
+                saveScoreStorage(round,scoreary);
+
                 
             },
             error: function(error) {
@@ -472,6 +510,11 @@ function sendtext(){
             }
         });
     });
+}
+
+function saveScoreStorage(round,scoreary){
+    localStorage.setItem('score-'+round,scoreary);
+    console.log('SAVE SCORE' + 'score-'+round + ':' + scoreary);
 }
 
 function setTextMenu(ary){
@@ -514,6 +557,7 @@ function setCommanText(key,topkey){
     $('#round').html((parseInt(checkround) + 1));
     relodpage('a[key="'+topkey+'"]');
     //$('a[key="'+key+'"]').removeClass('active').addClass('disabled');
+    return (parseInt(checkround) + 1);
 }
 
 //讀取頁面資料
@@ -579,12 +623,21 @@ function outputText(){
         var user = $('#username').val();
         
         var content = localStorage.getItem(user);
+        var round = $('#round').html();
+        var score = [];
+        for(var a = 1 ; a < parseInt(round) ; a++){
+            console.log('score-'+parseInt(a+1) + ':' + localStorage.getItem('score-'+parseInt(a+1)));
+            score.push('score-'+parseInt(a+1) + ':' + localStorage.getItem('score-'+parseInt(a+1)));
+        }
+        console.log(score);
         // any kind of extension (.txt,.cpp,.cs,.bat)
-        
+        content = content + score;
         var blob = new Blob([content], {
          type: "text/plain;charset=utf-8"
         });
+
         saveAs(blob, txtFile);
+        
     });
 }
 
