@@ -14,6 +14,7 @@
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/reader.css" rel="stylesheet">
+    <link href="css/loaders.min.css" rel="stylesheet">
     <link href="css/shop-item.css" rel="stylesheet">
 
     <!--For FLASK>
@@ -27,6 +28,8 @@
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="main.js"></script>
+    <script src="loaders.css.js"></script>
+
     <script src="vendor/FileSaver.js"></script>
     <script src="claen_ws_data.js"></script>
 
@@ -38,7 +41,8 @@
         sendtext();
         buildModel();
         outputText();
-        
+        $('.loader-inner').loaders();
+
         //saveLocalDataTemp();
         //sessionStorage.clear();
         
@@ -53,7 +57,6 @@
             update();
           });
         } catch(_) {}
-        textprogressbar();
         annosegment();//啟動標註
         gettime();
         setInterval(gettime,1000);
@@ -158,7 +161,9 @@
             <button type="button" id="txtbtn" class="custombtn" data-toggle="modal" data-target="#inputAllModal" title="打開輸出界面">
             <span id="prog">載入全部文本</span>       
             </button> 
-          
+            
+
+
             <div class="card-header" id="mainshowtext">
               文本顯示區
             </div>
@@ -170,10 +175,16 @@
                 <span class="progress-bar"></span>    
             </div>
             </progress>
+            
             <!--文字設定視窗-->
             <div class="card-body" onscroll="calc()">
-              <div id="all-text">
+              <div id="loadmask">
+                <div class="loader-inner line-scale"></div>  
               </div>
+              <div id="all-text">
+
+              </div>  
+              
             </div>
 
 
