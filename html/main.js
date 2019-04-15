@@ -122,6 +122,7 @@ function loadall() {
             textindex.push(0);
         }
     }
+    textindex[0] = 2;
     saveLocalList(textindex); //紀錄有多少篇文本
     var obj = sessionStorage.getItem('1');
     rowtext = (JSON.parse(obj)).text;
@@ -182,6 +183,7 @@ function load(row_text=null,ser_ary=null) {
                     var char_seg = $("<div></div>")
                         .addClass('charseg')
                         //.attr('title','請點擊進行標註')
+                        .attr('title','第'+(parseInt(i)+1)+"個字")
                         .append(char_block)
                         .append(seg_block);
                     $("#all-text")
@@ -191,7 +193,7 @@ function load(row_text=null,ser_ary=null) {
                 //container.appendChild(elem);
         }
     	calc();
-    //$('.charseg').tooltip();
+    $('.charseg').tooltip();
 	$('#inputModal').modal('hide');
     textprogressbar();
 }
@@ -285,6 +287,7 @@ function annosegment(){
                     width: '65%'
                 });
         }
+        
         var segary = segmentcount();
         var time = gettime();
         //console.log(time + "////回傳斷句" + segary);
@@ -297,7 +300,7 @@ function annosegment(){
       
         $(this).parent('.charseg').find('#seg')
         .css('padding-left','10px')
-        .css('padding-right','15px')
+        .css('padding-right','5px')
         .css('right','5px')
         .css('width','30px')
 
@@ -312,7 +315,7 @@ function annosegment(){
         .css('width','0px')
         $(this).parent('.charseg').find('#seg')
         .css('padding-left','5px')
-        .css('padding-right','10px')
+        .css('padding-right','5px')
         .css('width','0px')
         .css('right','15px')
 
@@ -446,7 +449,6 @@ function sendtext(){
         textlist = loadLocalList();
         alltext = loadAllTextData();//讀取全部文本
         console.log(alltext);
-        
         textlist[num-1] = 1;
         saveLocalList(textlist);
 
@@ -454,7 +456,7 @@ function sendtext(){
         var alldata = new Object;
         var trainary = new Object;
         var testary = new Object;
-
+        console.log(textlist);
         for(var i in textlist){
             a = parseInt(i) + 1;
             console.log(a);
@@ -468,6 +470,7 @@ function sendtext(){
                 //alldata['traindata'] = alltext[i]
             }
         }
+        console.log(trainary);
         alldata['testdata'] = testary;
         alldata['traindata'] = trainary;
         console.log(alldata);
@@ -503,6 +506,9 @@ function sendtext(){
                 var round = setCommanText(num,topkey.key);
                 //存擋
                 saveAllLocalStorage();
+                textlist = loadLocalList();
+                textlist[topkey.key] = 2;
+                saveLocalList(textlist);
                 //
                 saveScoreStorage(round,scoreary);
                 $('#loadmask').css('visibility', 'hidden');
@@ -517,7 +523,7 @@ function sendtext(){
 }
 
 function saveScoreStorage(round,scoreary){
-    localStorage.setItem('score-'+round,scoreary);
+    localStorage.setItem('score-'+round,JSON.stringify(scoreary));
     console.log('SAVE SCORE' + 'score-'+round + ':' + scoreary);
 }
 
@@ -589,9 +595,13 @@ function showTextCount(count){
 }
 
 //按鍵換頁
-function relodpage(selector){
+function relodpage(selector,key=null){
     var alltxt = getpagetext("div.charblock");
-    var num = $('.list-group-item.active').attr('key') ;
+    if(key == null){
+        var num = $('.list-group-item.active').attr('key') ;
+    }else{
+        var num = key;
+    }
     saveLocalData(num,alltxt);
     $('.list-group-item').siblings().removeClass('active').addClass('disabled');
     $(selector).removeClass('disabled').addClass('active');
@@ -627,16 +637,23 @@ function outputText(){
         var user = $('#username').val();
         
         var content = localStorage.getItem(user);
+        console.log(content);
         var round = $('#round').html();
         var score = [];
         for(var a = 1 ; a < parseInt(round) ; a++){
             console.log('score-'+parseInt(a+1) + ':' + localStorage.getItem('score-'+parseInt(a+1)));
-            score.push('score-'+parseInt(a+1) + ':' + localStorage.getItem('score-'+parseInt(a+1)));
+            var roundscore = 'score-' + parseInt(a+1);
+            //score.push('score-'+parseInt(a+1) + ':' + localStorage.getItem('score-'+parseInt(a+1)));
+            score.push('{"' + roundscore + '":"' + JSON.parse(localStorage.getItem('score-'+parseInt(a+1)))+'"}');
         }
+        var lastsave = sessionStorage.getItem('text_list'); //讀進度
         console.log(score);
+        console.log(lastsave);
         // any kind of extension (.txt,.cpp,.cs,.bat)
-        content = content + score;
-        var blob = new Blob([content], {
+        var json_data = {'name':user,'text':content,'score':score,'save':lastsave};
+        json_data = JSON.stringify(json_data);
+        console.log(json_data);
+        var blob = new Blob([json_data], {
          type: "text/plain;charset=utf-8"
         });
 
@@ -697,4 +714,102 @@ function textprogressbar(){
             setWidth();
         });
     }
+}
+
+function UpladFile() {
+    var fileInput = $('#files');
+    var uploadButton = $('#upload');
+
+    uploadButton.on('click', function() {
+    if (!window.FileReader) {
+        alert('Your browser is not supported');
+        return false;
+    }
+    var input = fileInput.get(0);
+
+    // Create a reader object
+    var reader = new FileReader();
+    if (input.files.length) {
+        var textFile = input.files[0];
+        // Read the file
+        reader.readAsText(textFile);
+        // When it's loaded, process it
+        //$(reader).on('load', processFile);
+        $(reader).on('load', processFile);
+        //savedata = JSON.parse(savedata[0]);
+        //loadsavedata(savedata);
+    } else {
+        alert('Please upload a file before continuing')
+    } 
+});
+}
+
+function processFile(e) {
+    var file = e.target.result,
+        results;
+    if (file && file.length) {
+        results = file.split("\n");
+        //console.log(results)
+        _data = JSON.parse(results)
+        loadsavedata(_data);
+    }
+}
+
+//讀取全部文本
+function loadsavedata(obj) {
+    var name = obj.name;
+    $('#username').val(name);
+    var list = obj.save;
+    var alltext = JSON.parse(obj.text);
+    //var alltext = obj.text.replace(/\r\n|\n/g,"").replace(/\s+/g, "").split('--');
+    list = list.replace('[','').replace(']','');
+    var index = list.split(',');
+    console.log(index);
+    var count = 0;
+    var nowno = 0;
+    var textindex = [];
+    for (var x = 0; x < index.length; x++) {
+        if(index[x] == '1'){
+            textindex.push(1);
+            count++;
+        }else if(index[x] == '2'){
+            textindex.push(2);
+            nowno = parseInt(x) + 1;
+        }else{
+            textindex.push(0);
+        }
+    }
+    console.log(textindex);
+    console.log(count);
+    console.log(nowno);
+    saveLocalList(textindex); //讀取進度
+
+    for(var i in alltext){
+        console.log('creat'+i);
+        saveLocalData(i,alltext[i].text);
+        if(i == 1){
+            continue;
+        }else{
+            var menubtn = $('<a></a>');
+            //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',i).attr('value','0').text('第'+ i +'區塊');
+            $('.list-group').append(menubtn);
+        }
+    }
+    
+    var obj = sessionStorage.getItem(nowno);
+    rowtext = (JSON.parse(obj)).text;
+    serary = (JSON.parse(obj)).seg;
+    
+    load(rowtext,serary);
+    relodpage('a[key='+nowno+']',nowno);
+    creatUserName();
+    
+    $('#mainshowtext').css('visibility','visible');
+    $('#alltextlist').css('visibility','visible');
+    $('#textmenu').css('visibility','visible');
+    $('.custombtn').css('visibility','hidden');
+    $('.col-lg-9').css('flex','0 0 75%');
+    $('#inputAllModal').modal('hide');
+    
 }

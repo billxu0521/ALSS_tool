@@ -42,7 +42,7 @@
         buildModel();
         outputText();
         $('.loader-inner').loaders();
-
+        UpladFile();
         //saveLocalDataTemp();
         //sessionStorage.clear();
         
@@ -160,9 +160,7 @@
           <div class="card card-outline-secondary my-4">
             <button type="button" id="txtbtn" class="custombtn" data-toggle="modal" data-target="#inputAllModal" title="打開輸出界面">
             <span id="prog">載入全部文本</span>       
-            </button> 
-            
-
+            </button>
 
             <div class="card-header" id="mainshowtext">
               文本顯示區
@@ -203,8 +201,11 @@
             <br>
         </div>
         <div class="modal-footer">
+          <input type=file id=files />
+          <button type="button" class="btn btn-default" id=upload>讀取檔案</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
           <button type="button" class="btn btn-primary" onclick="loadall()">輸出</button>
+          
         </div>
       </div></div></div>
 
