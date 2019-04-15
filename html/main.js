@@ -459,7 +459,6 @@ function sendtext(){
         console.log(textlist);
         for(var i in textlist){
             a = parseInt(i) + 1;
-            console.log(a);
             if(textlist[i] == 0){
                 //這邊是測試資料
                 testary[i] = alltext[a]
@@ -470,10 +469,14 @@ function sendtext(){
                 //alldata['traindata'] = alltext[i]
             }
         }
-        console.log(trainary);
         alldata['testdata'] = testary;
         alldata['traindata'] = trainary;
-        console.log(alldata);
+        console.log(testary);
+        console.log(testary.length);
+        if(isEmpty(testary)){
+            alert('文本全部結束');
+            return;
+        }
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
             url: 'https://alssapi.herokuapp.com/trainAndpredic_api',
@@ -765,7 +768,7 @@ function loadsavedata(obj) {
     list = list.replace('[','').replace(']','');
     var index = list.split(',');
     console.log(index);
-    var count = 0;
+    var count = 1;
     var nowno = 0;
     var textindex = [];
     for (var x = 0; x < index.length; x++) {
@@ -779,6 +782,7 @@ function loadsavedata(obj) {
             textindex.push(0);
         }
     }
+    $('#round').html(count);
     console.log(textindex);
     console.log(count);
     console.log(nowno);
@@ -810,6 +814,13 @@ function loadsavedata(obj) {
     $('#textmenu').css('visibility','visible');
     $('.custombtn').css('visibility','hidden');
     $('.col-lg-9').css('flex','0 0 75%');
-    $('#inputAllModal').modal('hide');
-    
+    $('#inputAllModal').modal('hide');   
+}
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
 }
