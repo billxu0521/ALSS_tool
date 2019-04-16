@@ -43,7 +43,7 @@ def dataconvert(jaondata):
     _alldataary = []
     _alltext = []
     _alllabel = []
-    print(_data)
+
     for i in _data:
         _text = _data[i]['text']
         _text = 'S' + _text
@@ -201,8 +201,8 @@ def SegPredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
-    traindata = dataconvert(rawalldata['traindata'])
     testdata = dataconvert(rawalldata['testdata'])
+    print(testdata)
     trainidx = []
     testidx = []
     text_obj = {}

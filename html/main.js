@@ -525,6 +525,59 @@ function sendtext(){
     });
 }
 
+
+//送出文本訓練預測 回來是預測結果
+function sendpredtext(){
+    $(document).on('click', 'button[name="sendpredtext"]', function(event){
+        //console.log($('textarea#outputtxt'));
+        //這邊需要一個偵測現在的文本區塊
+        var num = $('.list-group-item.active').attr('key');
+        num = parseInt(num);
+        var alltxt = getpagetext("div.charblock");
+        saveLocalData(num,alltxt);
+        textlist = loadLocalList();
+
+        testtext = sessionStorage.getItem(num);
+
+        //組成訓練文本測試文本
+        var alldata = new Object;
+        
+        alldata['testdata'] = testtext;
+
+        $('#loadmask').css('visibility', 'visible');
+        $.ajax({
+            url: 'https://alssapi.herokuapp.com/SegPredic_api',
+            //url: 'http://localhost:5000/trainAndpredic_api',
+            //data: $('textarea#outputtxt').serialize(),
+            data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
+            type: 'POST',
+
+            success: function(response) {
+
+                obj = JSON.parse(response);
+                //console.log(decodeURIComponent(obj.data));
+                res = decodeURIComponent(obj.data);
+                //var resary = res.split(",");
+                //resary.shift();
+                scoreary = obj.data;
+                console.log(scoreary);
+                
+                //處理排行
+                
+                //存擋
+                
+                //
+                $('#loadmask').css('visibility', 'hidden');
+                
+            },
+            error: function(error) {
+                $('#loadmask').css('visibility', 'hidden');
+                console.log(error);
+            }
+        });
+    });
+}
+
 function saveScoreStorage(round,scoreary){
     localStorage.setItem('score-'+round,JSON.stringify(scoreary));
     console.log('SAVE SCORE' + 'score-'+round + ':' + scoreary);

@@ -84,6 +84,12 @@ def trainAndpredic():
     #return json.dumps({'status':'OK','data':res});
     return json.dumps({'status':'OK','data':res});
 
+@app.route('/SegPredic_api', methods=['POST'])
+def trainAndpredic():
+    text = request.form['input_text']
+    res = crfmodel.SegPredic_api(text)
+    return json.dumps({'status':'OK','data':res});
+
 #建立CRF的接口
 @app.route('/buildcrfmodel', methods=['POST'])
 def buildcrfmodel():
