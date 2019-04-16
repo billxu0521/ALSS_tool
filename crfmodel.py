@@ -44,8 +44,26 @@ def dataconvert(jaondata):
     _alltext = []
     _alllabel = []
 
-    for i in _data:
-        _text = _data[i]['text']
+    if(len(_data)>1):
+        for i in _data:
+            _text = _data[i]['text']
+            _text = 'S' + _text
+            _text = list(_text)
+            _label = []
+            x = _data[i]['seg']
+            x = x + [0]
+            for a in x:
+                if a == 0:
+                    _label.append('N')
+                elif a == 1:
+                    _label.append('S')
+            
+            _alldata = crf.x_seq_to_features_discrete(_text, charstop), _label
+            _alltext.append(_text);
+            _alllabel.append(_label);
+            _alldataary.append(_alldata)
+    else:
+        _text = _data['text']
         _text = 'S' + _text
         _text = list(_text)
         _label = []
