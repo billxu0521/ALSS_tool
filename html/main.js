@@ -541,7 +541,8 @@ function sendpredtext(){
 
         //組成訓練文本測試文本
         var alldata = new Object;
-        
+        var testary = new Object;
+        testary[num] = testtext;
         alldata['testdata'] = testtext;
 
         $('#loadmask').css('visibility', 'visible');
