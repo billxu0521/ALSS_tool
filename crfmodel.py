@@ -201,6 +201,7 @@ def SegPredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
+    print(rawalldata)
     testdata = dataconvert(rawalldata['testdata'])
     print(testdata)
     trainidx = []
