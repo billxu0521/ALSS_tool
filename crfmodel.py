@@ -201,21 +201,11 @@ def SegPredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
-    print(rawalldata)
     testdata = dataconvert(rawalldata['testdata'])
-    print(testdata)
     trainidx = []
     testidx = []
-    text_obj = {}
     text_score = [] #紀錄每個區塊的不確定
     
-    #組織全部文本資訊    
-    for i in rawalldata['testdata']:        
-        testidx.append(i)
-        text_obj[i]=([len(rawalldata['testdata'][i]['text']),0])
-        
-    for i in rawalldata['traindata']:        
-        trainidx.append(i)
     print('info:',text_obj)
     print (datetime.datetime.now())
     modelname = filename.replace('/','').replace('*','')+str(charstop)+".m"
