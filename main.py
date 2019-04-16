@@ -85,7 +85,7 @@ def trainAndpredic():
     return json.dumps({'status':'OK','data':res});
 
 @app.route('/SegPredic_api', methods=['POST'])
-def trainAndpredic():
+def SegPredic():
     text = request.form['input_text']
     res = crfmodel.SegPredic_api(text)
     return json.dumps({'status':'OK','data':res});
