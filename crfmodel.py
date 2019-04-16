@@ -206,7 +206,6 @@ def SegPredic_api(inputtext):
     testidx = []
     text_score = [] #紀錄每個區塊的不確定
     
-    print('info:',text_obj)
     print (datetime.datetime.now())
     modelname = filename.replace('/','').replace('*','')+str(charstop)+".m"
     print(modelname)    
