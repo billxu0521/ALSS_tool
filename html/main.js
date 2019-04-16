@@ -536,14 +536,13 @@ function sendpredtext(){
         var alltxt = getpagetext("div.charblock");
         saveLocalData(num,alltxt);
         textlist = loadLocalList();
-
-        testtext = sessionStorage.getItem(num);
-
+        alltext = loadAllTextData();//讀取全部文本
         //組成訓練文本測試文本
         var alldata = new Object;
         var testary = new Object;
-        testary[num] = testtext;
-        alldata['testdata'] = testtext;
+        testary[num] = alltext[num];
+        console.log(testary);
+        alldata['testdata'] = testary;
 
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
