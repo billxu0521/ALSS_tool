@@ -244,4 +244,4 @@ def SegPredic_api(inputtext):
     print ("Recall:", r)
     print ("F1-score:", f_score)
     
-    return yref
+    return yout
