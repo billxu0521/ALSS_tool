@@ -88,6 +88,9 @@ def traindataconvert(jaondata):
         _alllabel.extend(_label);
     _d = _alltext,_alllabel
     _alldataary = _d
+    #f = open('tttt.txt', 'w')
+    #f.write(str(_alldataary))
+    #f.close()
 
     return _alldataary
 
