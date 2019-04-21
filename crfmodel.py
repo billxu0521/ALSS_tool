@@ -34,7 +34,7 @@ def x_seq_to_features_discrete(x):
         xf.append(mydict)
     return xf
 
-def dataconvert(jaondata):
+def testdataconvert(jaondata):
     charstop = True
     #_data = json.load(jaondata)
     _data = jaondata
@@ -62,6 +62,35 @@ def dataconvert(jaondata):
     
     return _alldataary
 
+def traindataconvert(jaondata):
+    charstop = True
+    #_data = json.load(jaondata)
+    _data = jaondata
+    _alldataary = []
+    _alltext = []
+    _alllabel = []
+
+    for i in _data:
+        _text = _data[i]['text']
+        _text = 'S' + _text
+        _text = list(_text)
+        _label = []
+        x = _data[i]['seg']
+        x = x + [0]
+        for a in x:
+            if a == 0:
+                _label.append('N')
+            elif a == 1:
+                _label.append('S')
+        
+        _alldata = x_seq_to_features_discrete(_text), _label
+        _alltext.extend(x_seq_to_features_discrete(_text));
+        _alllabel.extend(_label);
+    _d = _alltext,_alllabel
+    _alldataary = _d
+    
+    return _alldataary
+
 
 def trainAndpredic_api(inputtext):
     
@@ -73,8 +102,8 @@ def trainAndpredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
-    traindata = dataconvert(rawalldata['traindata'])
-    testdata = dataconvert(rawalldata['testdata'])
+    traindata = traindataconvert(rawalldata['traindata'])
+    testdata = testdataconvert(rawalldata['testdata'])
     trainidx = []
     testidx = []
     text_obj = {}
@@ -95,16 +124,22 @@ def trainAndpredic_api(inputtext):
     #trainer.clear() 
     #print trainer.params()
     #print(traindata[0])
-    for t in traindata:
-        x, y = t
-        trainer.append(x, y)
+    #for t in traindata:
+    #    x, y = t
+    #    trainer.append(x, y)
     
+    trainer.append(traindata[0], traindata[1])
     trainer.select(crfmethod)#做訓練
     trainer.set('max_iterations',30) #測試迴圈
     trainer.train(modelname)
     
+    
     tagger = pycrfsuite.Tagger()
+    #modelname = 'modelTrue1.m'
+    #建立訓練模型檔案
     tagger.open(modelname)
+    #tagger.dump(modelname+".txt")
+
     print (datetime.datetime.now()) 
     print ("Start testing...")
     
@@ -118,6 +153,7 @@ def trainAndpredic_api(inputtext):
     while testdata:        
         x, yref = testdata.pop()        
         yout = tagger.tag(x)
+        #print(yout)
         #pr = tagger.probability(yref)
         sp = 0
         np = 0
@@ -167,7 +203,6 @@ def trainAndpredic_api(inputtext):
         All_u_score += U_score
         text_score.append([str(testidx[i]),U_score])
         
-        
     tp, fp, fn, tn = zip(*results)
     tp, fp, fn, tn = sum(tp), sum(fp), sum(fn), sum(tn)
     #print(tp, fp, fn, tn)
@@ -199,15 +234,18 @@ def SegPredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
-    testdata = dataconvert(rawalldata['testdata'])
+    testdata = testdataconvert(rawalldata['testdata'])
     trainidx = []
     testidx = []
     text_score = [] #紀錄每個區塊的不確定
     
     print (datetime.datetime.now())
     modelname = filename.replace('/','').replace('*','')+str(charstop)+".m"
-    print(modelname)    
+    
     tagger = pycrfsuite.Tagger()
+    modelname = 'modelTrue1.m'
+    print(modelname)    
+    
     tagger.open(modelname)
     print (datetime.datetime.now()) 
     print ("Start testing...")
@@ -221,6 +259,7 @@ def SegPredic_api(inputtext):
     #while testdata:        
     x, yref = testdata.pop()        
     yout = tagger.tag(x)
+    print(yout)
     #pr = tagger.probability(yref)
     results.append(util.eval(yref, yout, "S"))
     
