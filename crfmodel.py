@@ -55,7 +55,7 @@ def dataconvert(jaondata):
             elif a == 1:
                 _label.append('S')
         
-        _alldata = crf.x_seq_to_features_discrete(_text), _label
+        _alldata = x_seq_to_features_discrete(_text), _label
         _alltext.append(_text);
         _alllabel.append(_label);
         _alldataary.append(_alldata)
