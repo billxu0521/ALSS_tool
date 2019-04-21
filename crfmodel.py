@@ -259,7 +259,7 @@ def SegPredic_api(inputtext):
     #while testdata:        
     x, yref = testdata.pop()        
     yout = tagger.tag(x)
-    print(yout)
+    #print(yout)
     #pr = tagger.probability(yref)
     results.append(util.eval(yref, yout, "S"))
     
