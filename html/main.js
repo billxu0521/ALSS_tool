@@ -141,7 +141,7 @@ function loadall() {
 function load(row_text=null,ser_ary=null) {
     var serary = ser_ary;
     var rowtext = row_text;
-
+    console.log(ser_ary);
     if (row_text == ''){
         obj = sessionStorage.getItem("1");
         rowtext = (JSON.parse(obj)).text;
@@ -172,13 +172,15 @@ function load(row_text=null,ser_ary=null) {
                             .text(',')
                             .css('padding-right',15)
                             .css('padding-left',10)
-                            .append("<div id='segline'></div>");
+                            .append("<div id='segline'></div>")
+                            .append("<div id='preline'></div>");
                     }else{
                         var seg_block = $("<div></div>")
                             .addClass('charblock')
                             .attr('id','seg')
                             .text('　')
-                            .append("<div id='segline'></div>");
+                            .append("<div id='segline'></div>")
+                            .append("<div id='preline'></div>");
                     }
                     var char_seg = $("<div></div>")
                         .addClass('charseg')
@@ -259,10 +261,11 @@ function annosegment(){
         var nowseg = $('div.charseg #char').index(this);
         console.log(nowseg);
         if(segary[nowseg] == 0){
-            $(this).parent('.charseg').find('#seg')
-                .text(',')
+            $(this).parent('.charseg').find('#seg')[0].firstChild.data=',';
+                //.text(',')
+            $(this).parent('.charseg').find('#seg').css('color','#000000');
                 //.css('right',15)
-                .append("<div id='segline'></div>");
+                
             $(this).parent('.charseg').find('#seg').find('#segline')
                 .css('border-width','1px')
                 //.css('width','90%')
@@ -273,11 +276,11 @@ function annosegment(){
                     width: '65%'
                 });
         }else if(segary[nowseg] == 1){
+            $(this).parent('.charseg').find('#seg')[0].firstChild.data='';
             $(this).parent('.charseg').find('#seg')
-                .text('')
                 .css('right',5)
+                .css('color','#000000');
                 
-                .append("<div id='segline'></div>");
             $(this).parent('.charseg').find('#seg').find('#segline')
                 .css('border-width','1px')
                 //.css('background-color','FFFFFF')
@@ -395,11 +398,17 @@ function infoswitch() {
 function showseg(resrary){
     for(var i in resrary){
         var ele=$("div#seg").eq(i);
-        if(resrary[i] == 'N'){
-            ele.text('　').css('background-color','#FFFFFF').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-        }else if(resrary[i] == 'S'){
-            ele.text('　').css('padding-right',3).css('padding-left',3).append("<div id='segline'></div>");
-            ele.text(',').css('background-color','#66FF66').css('padding-right',10).css('padding-left',10).append("<div id='segline'></div>");
+        var segary = segmentcount();
+        if(resrary[i] == 'S' && segary[i] == 1){
+            //電腦判斷有人也有
+            $("div#preline").eq(i).css('border-width','1px').css('left','5px').css('width','10px');
+        }else if(resrary[i] == 'N' && segary[i] == 1){
+            //電腦判斷沒有人有
+        }else if(resrary[i] == 'S' && segary[i] == 0){
+            //電腦判斷有人沒有
+            $("div#preline").eq(i).css('border-width','1px').css('left','5px').css('width','10px');
+        }else{
+            //都沒有
         }
     }
 }
@@ -561,7 +570,59 @@ function sendpredtext(){
                 //resary.shift();
                 scoreary = obj.data;
                 console.log(scoreary);
+                showseg(scoreary);
+                //處理排行
                 
+                //存擋
+                
+                //
+                $('#loadmask').css('visibility', 'hidden');
+                
+            },
+            error: function(error) {
+                $('#loadmask').css('visibility', 'hidden');
+                console.log(error);
+            }
+        });
+    });
+}
+
+//回顧模式用 回來是預測結果
+function sendreviewpredtext(){
+    $(document).on('click', 'button[name="sendreviewpredtext"]', function(event){
+        //console.log($('textarea#outputtxt'));
+        //這邊需要一個偵測現在的文本區塊
+        var num = $('.list-group-item.active').attr('key');
+        num = parseInt(num);
+        var alltxt = getpagetext("div.charblock");
+        saveLocalData(num,alltxt);
+        textlist = loadLocalList();
+        alltext = loadAllTextData();//讀取全部文本
+        //組成訓練文本測試文本
+        var alldata = new Object;
+        var testary = new Object;
+        testary[num] = alltext[num];
+        console.log(testary);
+        alldata['testdata'] = testary;
+
+        $('#loadmask').css('visibility', 'visible');
+        $.ajax({
+            url: 'https://alssapi.herokuapp.com/SegPredic_api',
+            //url: 'http://localhost:5000/trainAndpredic_api',
+            //data: $('textarea#outputtxt').serialize(),
+            data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
+            type: 'POST',
+
+            success: function(response) {
+
+                obj = JSON.parse(response);
+                //console.log(decodeURIComponent(obj.data));
+                res = decodeURIComponent(obj.data);
+                //var resary = res.split(",");
+                //resary.shift();
+                scoreary = obj.data;
+                console.log(scoreary);
+                showseg(scoreary);
                 //處理排行
                 
                 //存擋
@@ -664,6 +725,7 @@ function relodpage(selector,key=null){
 
     var part = $(selector).attr('key') ;
     obj = sessionStorage.getItem(part);
+    console.log(obj);
     rowtext = (JSON.parse(obj)).text;
     serary = (JSON.parse(obj)).seg;
     load(rowtext,serary);
@@ -678,6 +740,7 @@ function changepage(){
             return;
         }else{
             relodpage(this);
+            $('.list-group-item').removeClass('disabled');
         }
     });
 }
@@ -859,7 +922,7 @@ function loadsavedata(obj) {
     serary = (JSON.parse(obj)).seg;
     
     load(rowtext,serary);
-    relodpage('a[key='+nowno+']',nowno);
+    relodpage('a[key="'+nowno+'"]',nowno);
     creatUserName();
     
     $('#mainshowtext').css('visibility','visible');
@@ -877,3 +940,112 @@ function isEmpty(obj) {
     }
     return true;
 }
+
+function reviewUpladFile() {
+    var fileInput = $('#files');
+    var uploadButton = $('#upload');
+
+    uploadButton.on('click', function() {
+    if (!window.FileReader) {
+        alert('Your browser is not supported');
+        return false;
+    }
+    var input = fileInput.get(0);
+
+    // Create a reader object
+    var reader = new FileReader();
+    if (input.files.length) {
+        var textFile = input.files[0];
+        // Read the file
+        reader.readAsText(textFile);
+        // When it's loaded, process it
+        //$(reader).on('load', processFile);
+        $(reader).on('load', reviewprocessFile);
+        //savedata = JSON.parse(savedata[0]);
+        //loadsavedata(savedata);
+    } else {
+        alert('Please upload a file before continuing')
+    } 
+});
+}
+
+function reviewprocessFile(e) {
+    var file = e.target.result,
+        results;
+    if (file && file.length) {
+        results = file.split("\n");
+        //console.log(results)
+        _data = JSON.parse(results)
+        reviewloadsavedata(_data);
+    }
+}
+
+//讀取全部文本
+function reviewloadsavedata(obj) {
+    var name = obj.name;
+    $('#username').val(name);
+    var list = obj.save;
+    var alltext = JSON.parse(obj.text);
+    //var alltext = obj.text.replace(/\r\n|\n/g,"").replace(/\s+/g, "").split('--');
+    list = list.replace('[','').replace(']','');
+    var index = list.split(',');
+    console.log(index);
+    var count = 1;
+    var nowno = 0;
+    var textindex = [];
+    for (var x = 0; x < index.length; x++) {
+        if(index[x] == '1'){
+            textindex.push(1);
+            count++;
+        }else if(index[x] == '2'){
+            textindex.push(2);
+            nowno = parseInt(x) + 1;
+        }else{
+            textindex.push(0);
+        }
+    }
+    $('#round').html(count);
+    console.log(textindex);
+    console.log(count);
+    console.log(nowno);
+    saveLocalList(textindex); //讀取進度
+
+    for(var i in alltext){
+        console.log('creat'+i);
+        var _text ='';
+        for(var x in alltext[i].text){
+            if(alltext[i].seg[x] == 0){
+                _text = _text + alltext[i].text[x];
+            }else{
+                _text = _text + alltext[i].text[x] + ',';
+            }
+        }
+        saveLocalData(i,_text);
+        if(i < 2){
+            continue;
+        }else{
+            var menubtn = $('<a></a>');
+            //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',i).attr('value','0').text('第'+ i +'區塊');
+            $('.list-group').append(menubtn);
+        }
+    }
+    
+    var obj = sessionStorage.getItem("1");
+    console.log(obj);
+    rowtext = (JSON.parse(obj)).text;
+    serary = (JSON.parse(obj)).seg;
+    relodpage('a[key="2"]');
+    //load(rowtext,serary);
+    creatUserName();
+    $('.list-group-item').removeClass('disabled');
+    $('#mainshowtext').css('visibility','visible');
+    $('#alltextlist').css('visibility','visible');
+    $('#textmenu').css('visibility','visible');
+    $('.custombtn').css('visibility','hidden');
+    $('.col-lg-9').css('flex','0 0 75%');
+    $('#inputAllModal').modal('hide');   
+}
+
+
+

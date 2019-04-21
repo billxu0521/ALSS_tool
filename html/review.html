@@ -39,11 +39,12 @@
         showexport();
         showinport();
         sendtext();
-        sendpredtext();
+        sendreviewpredtext();
         buildModel();
         outputText();
+        changepage();
         $('.loader-inner').loaders();
-        UpladFile();
+        reviewUpladFile();
         //saveLocalDataTemp();
         //sessionStorage.clear();
         
@@ -58,7 +59,6 @@
             update();
           });
         } catch(_) {}
-        annosegment();//啟動標註
         gettime();
         setInterval(gettime,1000);
         window.reading_prog=100;
@@ -111,11 +111,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="annotation.html">斷句標註介面
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="review.html">回顧模式
               </a>
             </li>
@@ -148,7 +148,6 @@
             <div>區塊不確定性抽樣分數：<div id="text_score">--</div></div>
           </div>
           <div class="list-group">
-            <a class="list-group-item active" id="row-text" key =1 value=0>第1區塊</a>
 
           </div>
         </div>  
@@ -208,7 +207,7 @@
           <input type=file id=files />
           <button type="button" class="btn btn-default" id=upload>讀取檔案</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="loadall()">輸出</button>
+          <!--button type="button" class="btn btn-primary" onclick="loadall()">輸出</button-->
           
         </div>
       </div></div></div>
@@ -283,23 +282,11 @@
         </div>
         <div class="col-lg-1" id="textmenu">
           <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendtext" class="btn btn-default btn-sm">
+            <button type="button" id="txtbtn" name="sendreviewpredtext" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">文本抽樣</span>       
+            <span id="prog">回顧模式</span>       
             </button>
           </div>
-          <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendpredtext" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">預測文本</span>       
-            </button>
-          </div>
-          <div class="btndiv">
-            <button type="button" id="savetextbtn" name="savetext" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-book hidden-xs"></span>
-              <span id="prog">儲存結果</span>       
-            </button>
-            </div>
           </div>
         </div>
       </div>
