@@ -99,6 +99,7 @@ function calsegary(data){
         'text':datatext,
         'seg':segary
     }
+    console.log('len:'+datatext.length);
     return obj;
 }
 
@@ -481,7 +482,7 @@ function sendtext(){
         alldata['testdata'] = testary;
         alldata['traindata'] = trainary;
         console.log(testary);
-        console.log(testary.length);
+        //console.log(testary.length);
         if(isEmpty(testary)){
             alert('文本全部結束');
             return;
@@ -502,7 +503,7 @@ function sendtext(){
                 //var resary = res.split(",");
                 //resary.shift();
                 scoreary = obj.data;
-                console.log(scoreary);
+                //console.log(scoreary);
                 if(scoreary.length == 0){
                     alert('文本全部結束');
                     return;
@@ -556,7 +557,7 @@ function sendpredtext(){
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
             url: 'https://alssapi.herokuapp.com/SegPredic_api',
-            //url: 'http://localhost:5000/trainAndpredic_api',
+            //url: 'http://localhost:5000/SegPredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
@@ -608,7 +609,7 @@ function sendreviewpredtext(){
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
             url: 'https://alssapi.herokuapp.com/SegPredic_api',
-            //url: 'http://localhost:5000/trainAndpredic_api',
+            //url: 'http://localhost:5000/SegPredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',

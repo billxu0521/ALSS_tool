@@ -88,7 +88,7 @@ def traindataconvert(jaondata):
         _alllabel.extend(_label);
     _d = _alltext,_alllabel
     _alldataary = _d
-    
+
     return _alldataary
 
 
@@ -243,7 +243,7 @@ def SegPredic_api(inputtext):
     modelname = filename.replace('/','').replace('*','')+str(charstop)+".m"
     
     tagger = pycrfsuite.Tagger()
-    modelname = 'modelTrue1.m'
+    #modelname = 'modelTrue1.m'
     print(modelname)    
     
     tagger.open(modelname)
