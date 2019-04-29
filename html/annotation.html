@@ -33,6 +33,7 @@
     <script src="vendor/FileSaver.js"></script>
     <script src="claen_ws_data.js"></script>
     <script src="claen_answer_data.js"></script>
+    <script src="title_data.js"></script>
 
     <script>
       $(function() {
@@ -43,6 +44,7 @@
         sendpredtext();
         buildModel();
         outputText();
+        checkshowtitle();
         $('.loader-inner').loaders();
         UpladFile();
         //saveLocalDataTemp();
@@ -300,7 +302,11 @@
               <span class="glyphicon glyphicon-book hidden-xs"></span>
               <span id="prog">儲存結果</span>       
             </button>
-            </div>
+          </div>
+          <div class="btndiv">
+            <input type="checkbox" id="showtitle">題名標亮
+            </input>
+          </div>
           </div>
         </div>
       </div>

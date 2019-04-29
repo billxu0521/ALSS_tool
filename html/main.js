@@ -489,8 +489,8 @@ function sendtext(){
         }
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
-            url: 'https://alssapi.herokuapp.com/trainAndpredic_api',
-            //url: 'http://localhost:5000/trainAndpredic_api',
+            //url: 'https://alssapi.herokuapp.com/trainAndpredic_api',
+            url: 'http://localhost:5000/trainAndpredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
@@ -556,8 +556,8 @@ function sendpredtext(){
 
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
-            url: 'https://alssapi.herokuapp.com/SegPredic_api',
-            //url: 'http://localhost:5000/SegPredic_api',
+            //url: 'https://alssapi.herokuapp.com/SegPredic_api',
+            url: 'http://localhost:5000/SegPredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
@@ -731,6 +731,7 @@ function relodpage(selector,key=null){
     serary = (JSON.parse(obj)).seg;
     load(rowtext,serary);
     showTextCount(rowtext.length);
+    $('#showtitle').prop('checked', false);
 }
 
 
@@ -753,9 +754,14 @@ function getRandom(min,max){
 function outputText(){
     $(document).on('click', '#savetextbtn', function(event){
         console.log('SAVE');
+        var num = $('.list-group-item.active').attr('key');
+        num = parseInt(num);
+        var alltxt = getpagetext("div.charblock");
+        saveLocalData(num,alltxt);
+        saveAllLocalStorage();
         var txtFile = "test.txt";
         var user = $('#username').val();
-        
+
         var content = localStorage.getItem(user);
         console.log(content);
         var round = $('#round').html();
@@ -905,6 +911,7 @@ function loadsavedata(obj) {
     console.log(nowno);
     saveLocalList(textindex); //讀取進度
 
+/*
     for(var i in alltext){
         console.log('creat'+i);
         saveLocalData(i,alltext[i].text);
@@ -917,6 +924,29 @@ function loadsavedata(obj) {
             $('.list-group').append(menubtn);
         }
     }
+*/
+
+    for(var i in alltext){
+        console.log('creat'+i);
+        var _text ='';
+        for(var x in alltext[i].text){
+            if(alltext[i].seg[x] == 0){
+                _text = _text + alltext[i].text[x];
+            }else{
+                _text = _text + alltext[i].text[x] + ',';
+            }
+        }
+        saveLocalData(i,_text);
+        if(i < 2){
+            continue;
+        }else{
+            var menubtn = $('<a></a>');
+            //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',i).attr('value','0').text('第'+ i +'區塊');
+            $('.list-group').append(menubtn);
+        }
+    }
+    
     
     var obj = sessionStorage.getItem(nowno);
     rowtext = (JSON.parse(obj)).text;
@@ -1048,5 +1078,33 @@ function reviewloadsavedata(obj) {
     $('#inputAllModal').modal('hide');   
 }
 
+function checkshowtitle(){
+    $('#showtitle').click(function() {
+        console.log($(this).prop("checked"));
+        var _check = $(this).prop("checked");
+        showtitletag(_check);
+    });
+}
+
+
+function showtitletag(check){
+    var titletag_obj = TITLE_TAG;
+    var num = $('.list-group-item.active').attr('key');
+    console.log(titletag_obj[num]);
+    var _ary = titletag_obj[num];
+
+    //出標題
+    if(check == true){
+        for(var i in _ary){
+            var ele=$("div#char").eq(i);
+            if(_ary[i] == 1){
+                ele.css('background-color','aquamarine');
+            }
+        }
+    }else{
+        var ele=$(".charblock#char").css('background-color','white');
+    }
+
+}
 
 
