@@ -32,24 +32,21 @@
 
     <script src="vendor/FileSaver.js"></script>
     <script src="claen_ws_data.js"></script>
-    <script src="claen_answer_data.js"></script>
-    <script src="title_data.js"></script>
+    <script src="user_answer_data.js"></script>
 
     <script>
       $(function() {
         console.log("ALSS START");
-        ckearStorge();
         showexport();
         showinport();
         sendtext();
-        sendpredtext();
+        sendreviewpredtext();
         buildModel();
         outputText();
-        checkshowtitle();
-        sendreviewpredtext();
-        checkshowpre();
+        reschangepage();
+        loadallresult();
         $('.loader-inner').loaders();
-        UpladFile();
+        reviewUpladFile();
         //saveLocalDataTemp();
         //sessionStorage.clear();
         
@@ -64,7 +61,6 @@
             update();
           });
         } catch(_) {}
-        annosegment();//啟動標註
         gettime();
         setInterval(gettime,1000);
         window.reading_prog=100;
@@ -117,15 +113,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="annotation.html">斷句標註介面
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ">
               <a class="nav-link" href="review.html">回顧模式
               </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item active">
               <a class="nav-link" href="result.html">熱點模式
               </a>
             </li>
@@ -158,7 +154,6 @@
             <div>區塊不確定性抽樣分數：<div id="text_score">--</div></div>
           </div>
           <div class="list-group">
-            <a class="list-group-item active" id="row-text" key =1 value=0>第1區塊</a>
 
           </div>
         </div>  
@@ -218,7 +213,7 @@
           <input type=file id=files />
           <button type="button" class="btn btn-default" id=upload>讀取檔案</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="loadall()">輸出</button>
+          <!--button type="button" class="btn btn-primary" onclick="loadall()">輸出</button-->
           
         </div>
       </div></div></div>
@@ -293,36 +288,10 @@
         </div>
         <div class="col-lg-1" id="textmenu">
           <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendtext" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">文本抽樣</span>       
-            </button>
-          </div>
-          <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendpredtext" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">預測文本</span>       
-            </button>
-          </div>
-          <div class="btndiv">
-            <button type="button" id="savetextbtn" name="savetext" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-book hidden-xs"></span>
-              <span id="prog">儲存結果</span>       
-            </button>
-          </div>
-          <div class="btndiv">
             <button type="button" id="txtbtn" name="sendreviewpredtext" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-book hidden-xs"></span>
             <span id="prog">回顧模式</span>       
             </button>
-          </div>
-          <div class="btndiv">
-            <input type="checkbox" id="showtitle">題名標亮
-            </input>
-          </div>
-          <div class="btndiv">
-            <input type="checkbox" id="showpre">預測標亮
-            </input>
           </div>
           </div>
         </div>

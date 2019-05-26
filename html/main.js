@@ -2,6 +2,9 @@
 主功能的js
  */
 
+
+PRE = [];
+
 //目前時間
 function gettime() {
 	var time=new Date();
@@ -10,6 +13,12 @@ function gettime() {
     	(time.getMinutes()<10?('0'+time.getMinutes()):time.getMinutes())
     );
     return time;
+}
+
+//初始化資料
+function ckearStorge(){
+    localStorage.clear();
+    sessionStorage.clear();
 }
 
 //本地儲存資料到local
@@ -25,10 +34,10 @@ function creatUserName(){
     console.log('Creat User:' + user);
 }
 
-function saveAllLocalStorage(){
+function saveAllLocalStorage(user){
     var user = localStorage.getItem('username');
     var alldata = loadAllTextData();
-    console.log('SAVE' + user + ':' + alldata);
+    //console.log('SAVE' + user + ':' + alldata);
     saveLocalStorage(user,alldata);
 }
 
@@ -111,7 +120,7 @@ function loadall() {
     for(var i in alltext){
         var _a = (parseInt(i)+1);
         saveLocalData(_a,alltext[i]);
-        console.log(alltext[i]);
+        //console.log(alltext[i]);
         if(i == 0){
             textindex.push(0);
             continue;
@@ -139,10 +148,13 @@ function loadall() {
     $('#inputAllModal').modal('hide');
 }
 //讀取文本
-function load(row_text=null,ser_ary=null) {
+function load(row_text=null,ser_ary=null,userseg=null) {
+    if(userseg !== null){
+        console.log(userseg);
+    }
     var serary = ser_ary;
     var rowtext = row_text;
-    console.log(ser_ary);
+    //console.log(ser_ary);
     if (row_text == ''){
         obj = sessionStorage.getItem("1");
         rowtext = (JSON.parse(obj)).text;
@@ -168,27 +180,47 @@ function load(row_text=null,ser_ary=null) {
                         .text(charary[i]);
                     if(serary[i] == 1){
                         var seg_block = $("<div></div>")
-                            .addClass('charblock')
-                            .attr('id','seg')
-                            .text(',')
-                            .css('padding-right',15)
-                            .css('padding-left',10)
-                            .append("<div id='segline'></div>")
-                            .append("<div id='preline'></div>");
+                                .addClass('charblock')
+                                .attr('id','seg')
+                                .text(',')
+                                .css('padding-right',15)
+                                .css('padding-left',10)
+                                .append("<div id='segline'></div>")
+                                .append("<div id='preline'></div>");
                     }else{
-                        var seg_block = $("<div></div>")
-                            .addClass('charblock')
-                            .attr('id','seg')
-                            .text('　')
-                            .append("<div id='segline'></div>")
-                            .append("<div id='preline'></div>");
+                        if(userseg[i] > 0 ){
+                            var _color = setUserSegColor(userseg[i]);
+                            var seg_block = $("<div></div>")
+                                .addClass('charblock')
+                                .attr('id','seg')
+                                .text(',')
+                                .css('color',_color)
+                                .append("<div id='segline'></div>")
+                                .append("<div id='preline'></div>");
+                        }else{
+                            var seg_block = $("<div></div>")
+                                .addClass('charblock')
+                                .attr('id','seg')
+                                .text('　')
+                                .append("<div id='segline'></div>")
+                                .append("<div id='preline'></div>");
+                        }
                     }
-                    var char_seg = $("<div></div>")
-                        .addClass('charseg')
-                        //.attr('title','請點擊進行標註')
-                        .attr('title','第'+(parseInt(i)+1)+"個字")
-                        .append(char_block)
-                        .append(seg_block);
+                    if(userseg[i] > 0 ){
+                        var char_seg = $("<div></div>")
+                            .addClass('charseg')
+                            .attr('title','第'+(parseInt(i)+1)+"個字 標註數量:" + userseg[i] + '個。')
+                            .append(char_block)
+                            .append(seg_block);
+                    }else{
+                        var char_seg = $("<div></div>")
+                            .addClass('charseg')
+                            //.attr('title','請點擊進行標註')
+                            .attr('title','第'+(parseInt(i)+1)+"個字")
+                            .append(char_block)
+                            .append(seg_block);
+                    }
+                    
                     $("#all-text")
                         .append(char_seg);
                 }
@@ -213,6 +245,27 @@ function calalltext(textary){
         }
     }
     return alltext
+}
+
+function setUserSegColor(int){
+    switch(int){
+        case 0:
+            return '#000000';
+        case 1:
+            return '#CC0000';
+        case 2:
+            return '#EE7700';
+        case 3:
+            return '#EEEE00';
+        case 4:
+            return '#227700';
+        case 5:
+            return '#0044BB';
+        case 6:
+            return '#220088';
+        case 7:
+            return '#660077';
+    }
 }
 
 //當輸入視窗被打開時讀取
@@ -377,6 +430,81 @@ function annosegment(){
     */
 }
 
+//讀取全部文本
+function loadallresult() {
+    var alltext = $('#inputalltxt').val().replace(/\r\n|\n/g,"").replace(/\s+/g, "").split('--');
+    alltext = TEXT.replace(/\r\n|\n/g,"").replace(/\s+/g, "").split('--');
+    var textindex = [];
+    for(var i in alltext){
+        var _a = (parseInt(i)+1);
+        saveLocalData(_a,alltext[i]);
+        //console.log(alltext[i]);
+        if(i == 0){
+            textindex.push(0);
+            continue;
+        }else{
+            var menubtn = $('<a></a>');
+            //menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊\n\n不確定值:').append('<div id="u_score">--</div>');
+            menubtn.addClass("list-group-item").attr('id','row-text').attr('key',_a).attr('value','0').text('第'+ _a +'區塊');
+            $('.list-group').append(menubtn);
+            textindex.push(0);
+        }
+    }
+    textindex[0] = 2;
+    //var userseg = getAllSeg(ALL_USER_DATA);
+    saveLocalList(textindex); //紀錄有多少篇文本
+    var obj = sessionStorage.getItem('1');
+    rowtext = (JSON.parse(obj)).text;
+    serary = (JSON.parse(obj)).seg;
+    //load(rowtext,serary);
+    relodpage('a[key="2"]',null,true);
+    //creatUserName();
+    setUserResult();
+
+    $('.list-group-item').removeClass('disabled');
+    $('#mainshowtext').css('visibility','visible');
+    $('#alltextlist').css('visibility','visible');
+    $('#textmenu').css('visibility','visible');
+    $('.custombtn').css('visibility','hidden');
+    $('.col-lg-9').css('flex','0 0 75%');
+    $('#inputAllModal').modal('hide');
+}
+
+
+function getAllSeg(ary){
+    var segary = [];
+    for(var i in ary){
+        _obj = ary[i];
+        _text = _obj.text;
+        _text = JSON.parse(_text);
+        for(var a in _text){
+            var _segary = [];
+            if(segary[a-1] == null){
+                _segary = [];
+            }else{
+                _segary = segary[a-1];
+            }
+            _seg = _text[a].seg;
+            for(var x in _seg){
+                if(_segary[x] == null ){
+                    _segary[x] = 0; 
+                }
+                if(_seg[x] === 1){   
+                    _segary[x] += 1;
+                }
+            }
+            segary[a-1] = _segary ;
+        }
+    }
+    return segary;
+}
+
+function setUserResult(){
+    for(var i in ALL_USER_DATA){
+        _rowobj = ALL_USER_DATA[i];
+    }
+}
+
 //計算標註陣列
 function segmentcount(){
     var segary = []; //紀錄是否斷句 0=沒斷 1=有斷
@@ -397,6 +525,7 @@ function infoswitch() {
 
 //產出標點符號
 function showseg(resrary){
+    console.log('??');
     for(var i in resrary){
         var ele=$("div#seg").eq(i);
         var segary = segmentcount();
@@ -570,8 +699,11 @@ function sendpredtext(){
                 //var resary = res.split(",");
                 //resary.shift();
                 scoreary = obj.data;
+                PRE = [];
                 console.log(scoreary);
+                PRE = scoreary;
                 showseg(scoreary);
+                $('#showpre').prop('checked', true);
                 //處理排行
                 
                 //存擋
@@ -608,8 +740,8 @@ function sendreviewpredtext(){
 
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
-            url: 'https://alssapi.herokuapp.com/SegPredic_api',
-            //url: 'http://localhost:5000/SegPredic_api',
+            //url: 'https://alssapi.herokuapp.com/SegPredic_api',
+            url: 'http://localhost:5000/SegPredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
@@ -713,7 +845,10 @@ function showTextCount(count){
 }
 
 //按鍵換頁
-function relodpage(selector,key=null){
+function relodpage(selector,key=null,res=null){
+    if(res !== null){
+        var userseg = getAllSeg(ALL_USER_DATA);
+    }
     var alltxt = getpagetext("div.charblock");
     if(key == null){
         var num = $('.list-group-item.active').attr('key') ;
@@ -729,7 +864,11 @@ function relodpage(selector,key=null){
     console.log(obj);
     rowtext = (JSON.parse(obj)).text;
     serary = (JSON.parse(obj)).seg;
-    load(rowtext,serary);
+    if(res !== null){
+        load(rowtext,serary,userseg[part-1]);
+    }else{
+        load(rowtext,serary);
+    }
     showTextCount(rowtext.length);
     $('#showtitle').prop('checked', false);
 }
@@ -747,6 +886,17 @@ function changepage(){
     });
 }
 
+function reschangepage(){
+    $(document).on('click', '#row-text', function(event){
+        if($(this).is('.list-group-item.disabled')){
+            return;
+        }else{
+            relodpage(this,null,true);
+            $('.list-group-item').removeClass('disabled');
+        }
+    });
+}
+
 function getRandom(min,max){
         return Math.floor(Math.random()*(max-min+1)/10)+min;
     };
@@ -756,6 +906,7 @@ function outputText(){
         console.log('SAVE');
         var num = $('.list-group-item.active').attr('key');
         num = parseInt(num);
+        creatUserName();
         var alltxt = getpagetext("div.charblock");
         saveLocalData(num,alltxt);
         saveAllLocalStorage();
@@ -773,12 +924,12 @@ function outputText(){
             score.push('{"' + roundscore + '":"' + JSON.parse(localStorage.getItem('score-'+parseInt(a+1)))+'"}');
         }
         var lastsave = sessionStorage.getItem('text_list'); //讀進度
-        console.log(score);
-        console.log(lastsave);
+        //console.log(score);
+        //console.log(lastsave);
         // any kind of extension (.txt,.cpp,.cs,.bat)
         var json_data = {'name':user,'text':content,'score':score,'save':lastsave};
         json_data = JSON.stringify(json_data);
-        console.log(json_data);
+        //console.log(json_data);
         var blob = new Blob([json_data], {
          type: "text/plain;charset=utf-8"
         });
@@ -977,27 +1128,27 @@ function reviewUpladFile() {
     var uploadButton = $('#upload');
 
     uploadButton.on('click', function() {
-    if (!window.FileReader) {
-        alert('Your browser is not supported');
-        return false;
-    }
-    var input = fileInput.get(0);
+        if (!window.FileReader) {
+            alert('Your browser is not supported');
+            return false;
+        }
+        var input = fileInput.get(0);
 
-    // Create a reader object
-    var reader = new FileReader();
-    if (input.files.length) {
-        var textFile = input.files[0];
-        // Read the file
-        reader.readAsText(textFile);
-        // When it's loaded, process it
-        //$(reader).on('load', processFile);
-        $(reader).on('load', reviewprocessFile);
-        //savedata = JSON.parse(savedata[0]);
-        //loadsavedata(savedata);
-    } else {
-        alert('Please upload a file before continuing')
-    } 
-});
+        // Create a reader object
+        var reader = new FileReader();
+        if (input.files.length) {
+            var textFile = input.files[0];
+            // Read the file
+            reader.readAsText(textFile);
+            // When it's loaded, process it
+            //$(reader).on('load', processFile);
+            $(reader).on('load', reviewprocessFile);
+            //savedata = JSON.parse(savedata[0]);
+            //loadsavedata(savedata);
+        } else {
+            alert('Please upload a file before continuing')
+        } 
+    });
 }
 
 function reviewprocessFile(e) {
@@ -1086,7 +1237,6 @@ function checkshowtitle(){
     });
 }
 
-
 function showtitletag(check){
     var titletag_obj = TITLE_TAG;
     var num = $('.list-group-item.active').attr('key');
@@ -1106,5 +1256,24 @@ function showtitletag(check){
     }
 
 }
+
+
+function checkshowpre(){
+    $('#showpre').click(function() {
+        console.log($(this).prop("checked"));
+        var _check = $(this).prop("checked");
+        
+        if(_check == true){
+            showseg(PRE);
+        }else{
+            for(var i in PRE){
+                $("div#preline").eq(i).css('border-width','0px').css('left','0px').css('width','0px');
+            }
+        }
+
+        
+    });
+}
+
 
 
