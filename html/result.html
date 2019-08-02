@@ -13,7 +13,7 @@
     <!--For Normal-->
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/reader.css" rel="stylesheet">
+    <link href="css/result.css" rel="stylesheet">
     <link href="css/loaders.min.css" rel="stylesheet">
     <link href="css/shop-item.css" rel="stylesheet">
 
@@ -45,11 +45,20 @@
         outputText();
         reschangepage();
         loadallresult();
+        
+        for(var i in ALL_USER_DATA){
+          _obj = ALL_USER_DATA[i];
+          _text = _obj.text;
+          _text = JSON.parse(_text);
+          console.log(_obj.name);
+          for(var a in _text){
+            console.log((_text[a].seg).length);
+          }
+        }
+        
+
         $('.loader-inner').loaders();
         reviewUpladFile();
-        //saveLocalDataTemp();
-        //sessionStorage.clear();
-        
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -262,7 +271,9 @@
         </div>
         </div></div></div>
 
-        <div class="modal fade" id="ouputModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+
+
+        <div class="modal fade" id="GoodModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
         
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -270,27 +281,52 @@
         
 
         <h4 class="modal-title">
-                輸出文本&nbsp;
+                全部正確斷句排序&nbsp;
         </h4>
         <div class="modal-body">
-            <textarea id="outputtxt" class="form-control" placeholder="目前無內容……" name="input_text"></textarea>
-            <br>
+            
         </div>
-        <div class="modal-footer">
-          <button type="button" id="buildmodel" name="buildmodel" class="btn btn-default btn-sm">
-            <span id="prog">建立CRF模型</span>       
-          </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="exporttxt()">輸出</button>
+        <div class="modal-footer" >
+          <table class="table" id="segrightrank">
+            
+          </table>
+          
         </div>
         </div></div></div>
+
+        <div class="modal fade" id="BadModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+        
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        
+
+        <h4 class="modal-title">
+                全部錯誤斷句排序&nbsp;
+        </h4>
+        <div class="modal-body">
+            
+        </div>
+        <div class="modal-footer" >
+          <table class="table" id="segworngrank">
+            
+          </table>
+          
+        </div>
+        </div></div></div>
+
+
         </div>
         </div>
         <div class="col-lg-1" id="textmenu">
           <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendreviewpredtext" class="btn btn-default btn-sm">
+            <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#GoodModal" title="打開輸出界面">
             <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">回顧模式</span>       
+            <span id="goodsegrank">正確斷句</span>       
+            </button>
+            <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#BadModal" title="打開輸出界面">
+            <span class="glyphicon glyphicon-book hidden-xs"></span>
+            <span id="goodsegrank">錯誤斷句</span>       
             </button>
           </div>
           </div>

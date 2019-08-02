@@ -4,6 +4,8 @@
 
 
 PRE = [];
+GOODRANK = [];
+BADRANK = [];
 
 //目前時間
 function gettime() {
@@ -148,9 +150,10 @@ function loadall() {
     $('#inputAllModal').modal('hide');
 }
 //讀取文本
-function load(row_text=null,ser_ary=null,userseg=null) {
+function load(row_text=null,ser_ary=null,userseg=null,key=null) {
     if(userseg !== null){
         console.log(userseg);
+        console.log(SEG_DATA[key]);
     }
     var serary = ser_ary;
     var rowtext = row_text;
@@ -188,25 +191,53 @@ function load(row_text=null,ser_ary=null,userseg=null) {
                                 .append("<div id='segline'></div>")
                                 .append("<div id='preline'></div>");
                     }else{
-                        if(userseg[i] > 0 ){
-                            var _color = setUserSegColor(userseg[i]);
-                            var seg_block = $("<div></div>")
+                        if(userseg != null && userseg[i] > 0 ){
+                            //如果正確
+                            if(SEG_DATA[key][i] == 1){
+                                var _color = setUserSegColor(userseg[i],true);
+                                var _pre = charary[parseInt(i)-1] + charary[parseInt(i)-2] + charary[parseInt(i)-3] + charary[parseInt(i)-4] + charary[parseInt(i)-5] + charary[parseInt(i)-6] + charary[parseInt(i)-7]+ charary[parseInt(i)-8] + charary[parseInt(i)-9] + charary[parseInt(i)-10];
+                                var _next = charary[parseInt(i)+1] + charary[parseInt(i)+2] + charary[parseInt(i)+3] + charary[parseInt(i)+4] + charary[parseInt(i)+5] + charary[parseInt(i)+6] + charary[parseInt(i)+7] + charary[parseInt(i)+8] + charary[parseInt(i)+9] + charary[parseInt(i)+10];
+                                GOODRANK.push({'char':charary[i],'key':i,'count':userseg[i],'pre':_pre,'next':_next});
+                                var seg_block = $("<div></div>")
                                 .addClass('charblock')
                                 .attr('id','seg')
                                 .text(',')
-                                .css('color',_color)
+                                .css('background-color',_color)
                                 .append("<div id='segline'></div>")
                                 .append("<div id='preline'></div>");
+                            }else if(SEG_DATA[key][i] == 0){
+                                //不正確
+                                var _color = setUserSegColor(userseg[i],false);
+                                var _pre = charary[parseInt(i)-1] + charary[parseInt(i)-2] + charary[parseInt(i)-3] + charary[parseInt(i)-4] + charary[parseInt(i)-5] + charary[parseInt(i)-6] + charary[parseInt(i)-7]+ charary[parseInt(i)-8] + charary[parseInt(i)-9] + charary[parseInt(i)-10];
+                                var _next = charary[parseInt(i)+1] + charary[parseInt(i)+2] + charary[parseInt(i)+3] + charary[parseInt(i)+4] + charary[parseInt(i)+5] + charary[parseInt(i)+6] + charary[parseInt(i)+7] + charary[parseInt(i)+8] + charary[parseInt(i)+9] + charary[parseInt(i)+10];
+                                BADRANK.push({'char':charary[i],'key':i,'count':userseg[i],'pre':_pre,'next':_next});
+                                var seg_block = $("<div></div>")
+                                .addClass('charblock')
+                                .attr('id','seg')
+                                .text('　')
+                                .css('background-color',_color)
+                                .append("<div id='segline'></div>")
+                                .append("<div id='preline'></div>");
+                            }
                         }else{
-                            var seg_block = $("<div></div>")
+                            if(userseg != null && SEG_DATA[key][i] ==1){
+                                var seg_block = $("<div></div>")
+                                .addClass('charblock')
+                                .attr('id','seg')
+                                .text(',')
+                                .append("<div id='segline'></div>")
+                                .append("<div id='preline'></div>");
+                            }else{
+                                var seg_block = $("<div></div>")
                                 .addClass('charblock')
                                 .attr('id','seg')
                                 .text('　')
                                 .append("<div id='segline'></div>")
                                 .append("<div id='preline'></div>");
+                            }
                         }
                     }
-                    if(userseg[i] > 0 ){
+                    if(userseg != null && userseg[i] > 0 ){
                         var char_seg = $("<div></div>")
                             .addClass('charseg')
                             .attr('title','第'+(parseInt(i)+1)+"個字 標註數量:" + userseg[i] + '個。')
@@ -231,6 +262,8 @@ function load(row_text=null,ser_ary=null,userseg=null) {
     $('.charseg').tooltip();
 	$('#inputModal').modal('hide');
     textprogressbar();
+    setGoodRank();
+    setwrongRank();
 }
 
 //整理顯示和標注的文本
@@ -247,25 +280,47 @@ function calalltext(textary){
     return alltext
 }
 
-function setUserSegColor(int){
-    switch(int){
+function setUserSegColor(int,bool){
+    if(bool === true){
+        switch(int){
         case 0:
             return '#000000';
         case 1:
-            return '#CC0000';
+            return '#b6e4b2';
         case 2:
-            return '#EE7700';
+            return '#9edb99';
         case 3:
-            return '#EEEE00';
+            return '#86d37f';
         case 4:
-            return '#227700';
+            return '#6eca66';
         case 5:
-            return '#0044BB';
+            return '#56c14c';
         case 6:
-            return '#220088';
+            return '#3eb832';
         case 7:
-            return '#660077';
+            return '#26af19';
     }
+    }else{
+        switch(int){
+        case 0:
+            return '#000000';
+        case 1:
+            return '#fecccc';
+        case 2:
+            return '#fdb2b2';
+        case 3:
+            return '#fd9999';
+        case 4:
+            return '#fd7f7f';
+        case 5:
+            return '#fc6666';
+        case 6:
+            return '#fc4c4c';
+        case 7:
+            return '#fb3232';
+    }
+    }
+    
 }
 
 //當輸入視窗被打開時讀取
@@ -375,7 +430,6 @@ function annosegment(){
         .css('padding-right','5px')
         .css('width','0px')
         .css('right','15px')
-
         
     });
 
@@ -459,7 +513,6 @@ function loadallresult() {
     //load(rowtext,serary);
     relodpage('a[key="2"]',null,true);
     //creatUserName();
-    setUserResult();
 
     $('.list-group-item').removeClass('disabled');
     $('#mainshowtext').css('visibility','visible');
@@ -499,11 +552,6 @@ function getAllSeg(ary){
     return segary;
 }
 
-function setUserResult(){
-    for(var i in ALL_USER_DATA){
-        _rowobj = ALL_USER_DATA[i];
-    }
-}
 
 //計算標註陣列
 function segmentcount(){
@@ -865,7 +913,7 @@ function relodpage(selector,key=null,res=null){
     rowtext = (JSON.parse(obj)).text;
     serary = (JSON.parse(obj)).seg;
     if(res !== null){
-        load(rowtext,serary,userseg[part-1]);
+        load(rowtext,serary,userseg[part-1],(part-1));
     }else{
         load(rowtext,serary);
     }
@@ -1273,6 +1321,32 @@ function checkshowpre(){
 
         
     });
+}
+
+function setGoodRank(){
+    GOODRANK = GOODRANK.sort(function (a, b) {
+        return a.count < b.count ? 1 : -1;
+    });
+    var _table = $('table#segrightrank');
+    var thead = "<thead><tr><th scope='col'>排行</th><th scope='col'></th><th scope='col'>位置</th><th scope='col'>標註數量</th></tr></thead>"
+    var tbody = $('<tbody/>');
+    for(var i = 0 ;i < GOODRANK.length;i++){
+        tbody.append("<tr><th>"+ (i+1) +"<td>"+ GOODRANK[i].pre +"<a style='color:red'>"+ GOODRANK[i].char + "</a>" + GOODRANK[i].next +"</td><td>"+ GOODRANK[i].key +"</td><td>"+ GOODRANK[i].count +"</td></td></th></tr>");
+    }
+    _table.append(thead).append(tbody);
+}
+
+function setwrongRank(){
+    BADRANK = BADRANK.sort(function (a, b) {
+        return a.count < b.count ? 1 : -1;
+    });
+    var _table = $('table#segworngrank');
+    var thead = "<thead><tr><th scope='col'>排行</th><th scope='col'></th><th scope='col'>位置</th><th scope='col'>標註數量</th></tr></thead>"
+    var tbody = $('<tbody/>');
+    for(var i = 0 ;i < BADRANK.length;i++){
+        tbody.append("<tr><th>"+ (i+1) +"<td>"+ BADRANK[i].pre +"<a style='color:red'>"+ BADRANK[i].char + "</a>" + BADRANK[i].next +"</td><td>"+ BADRANK[i].key +"</td><td>"+ BADRANK[i].count +"</td></th></tr>");
+    }
+    _table.append(thead).append(tbody);
 }
 
 

@@ -54,7 +54,6 @@ def testdataconvert(jaondata):
                 _label.append('N')
             elif a == 1:
                 _label.append('S')
-        
         _alldata = x_seq_to_features_discrete(_text), _label
         _alltext.append(_text);
         _alllabel.append(_label);
@@ -111,9 +110,10 @@ def trainAndpredic_api(inputtext):
     testidx = []
     text_obj = {}
     text_score = [] #紀錄每個區塊的不確定
+    f = open('UserRES.txt', 'w')
     
     #組織全部文本資訊    
-    for i in rawalldata['testdata']:        
+    for i in rawalldata['testdata']:  
         testidx.append(i)
         text_obj[i]=([len(rawalldata['testdata'][i]['text']),0])
         
@@ -152,10 +152,13 @@ def trainAndpredic_api(inputtext):
     Spp = []
     Npp = []
     all_len= 0
-    
-    while testdata:        
-        x, yref = testdata.pop()        
+    ftt = open('reslog.txt', 'w')
+    while testdata:      
+        x, yref = testdata.pop(0) 
+        ftt.write(str(x))
+        ftt.write(str(yref))
         yout = tagger.tag(x)
+        ftt.write(str(yout))
         #print(yout)
         #pr = tagger.probability(yref)
         sp = 0
@@ -224,7 +227,21 @@ def trainAndpredic_api(inputtext):
     print ("Recall:", r)
     print ("F1-score:", f_score)
     print(text_score)
+    log_text = ''
+    log_text += "----Doc Result-----" + "\n"
+    log_text += "Total tokens in Test Set:" + str(tp+fp+fn+tn) +'\n'
+    log_text += "Total S in REF:" + str(tp+fn) +'\n'
+    log_text += "Total S in OUT:" + str(tp+fp) +'\n'
+    log_text += "Presicion:" + str(p) +'\n'
+    log_text += "Recall:" + str(r) +'\n'
+    log_text += "F1-Score:" + str(f_score) + '\n'
+    log_text += '\n' + "=============" + '\n'
+    log_text += 'End Time:' + str(datetime.datetime.now()) + '\n'
+    log_text += '\n'
     
+    f.write(str(log_text))
+    f.close()
+    ftt.close()
     return text_score
 
 def SegPredic_api(inputtext):
