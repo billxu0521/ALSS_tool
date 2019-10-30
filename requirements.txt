@@ -11,3 +11,4 @@ cffi==1.10.0
 numpy==1.15.4
 python-crfsuite==0.9.6
 Flask-Cors==3.0.7
+Flask-Compress==1.4.0
