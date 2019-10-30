@@ -29,44 +29,16 @@ app = Flask(__name__)
 CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config.from_object(DevConfig)
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
+
 # 路由和處理函式配對
 @app.route('/')
 def index():
     return render_template('annotation.html')
-# 判斷自己執行非被當做引入的模組，因為 __name__ 這變數若被當做模組引入使用就不會是 __main__
-if __name__ == '__main__':
-    app.run()
+
+@app.route('/annotation')
+def annotation():
+    return render_template('annotation.html')
     
-@app.route('/crftag', methods=['POST'])
-
-#測試用的最後要刪掉
-@app.route('/signUp')
-def signUp():
-    return render_template('signUp.html')
-
-#測試用的最後要刪掉
-@app.route('/signUpUser', methods=['POST'])
-def signUpUser():
-    #user =  request.form['username'];
-    #password = request.form['password'];
-    text = request.form['input_text']
-    res = predic_api(text)
-    return json.dumps({'status':'OK','data':res});
-
 @app.route('/preseg', methods=['POST'])
 def preseg():
         
@@ -79,7 +51,7 @@ def preseg():
 
 @app.route('/trainAndpredic_api', methods=['POST'])
 def trainAndpredic():
-    text = request.form['input_text']
+    text = request.values['input_text']
     res = crfmodel.trainAndpredic_api(text)
     #return json.dumps({'status':'OK','data':res});
     return json.dumps({'status':'OK','data':res});
@@ -97,16 +69,6 @@ def buildcrfmodel():
     print(text)
     res = runcrf.buildCrf(text)
     return json.dumps({'status':'OK','data':res});
-
-@app.route('/api/str/<string:inputtext>', methods=['GET'])
-def get_task(inputtext):
-    task = list(filter(lambda t: t['id'] == inputtext, tasks))
-    #if len(task) == 0:
-    #    abort(404)
-    res = predic_api(inputtext)
-
-    #return jsonify({'task': task[0]})
-    return (res)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', debug=True)

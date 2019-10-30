@@ -48,7 +48,7 @@ def testdataconvert(jaondata):
         _text = list(_text)
         _label = []
         x = _data[i]['seg']
-        x = x + [0]
+        x = [0] + x  
         for a in x:
             if a == 0:
                 _label.append('N')
@@ -75,7 +75,7 @@ def traindataconvert(jaondata):
         _text = list(_text)
         _label = []
         x = _data[i]['seg']
-        x = x + [0]
+        x = [0] + x  
         for a in x:
             if a == 0:
                 _label.append('N')
@@ -104,6 +104,7 @@ def trainAndpredic_api(inputtext):
     crfmethod = "lbfgs"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
     #將文本從JSON轉換
     rawalldata = json.loads(material)
+    print(rawalldata)
     traindata = traindataconvert(rawalldata['traindata'])
     testdata = testdataconvert(rawalldata['testdata'])
     trainidx = []

@@ -12,10 +12,10 @@
 
     <!--For Normal-->
     <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/reader.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/loaders.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/shop-item.css') }}" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/result.css" rel="stylesheet">
+    <link href="css/loaders.min.css" rel="stylesheet">
+    <link href="css/shop-item.css" rel="stylesheet">
 
     <!--For FLASK>
     <link rel="text/javascript" href="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}">
@@ -25,34 +25,40 @@
     <link rel="text/javascript" href="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}">
     <link rel="text/javascript" href="{{ url_for('static', filename='main.js') }}"-->
     <!-- Bootstrap core JavaScript -->
-    <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
-    <script src="{{ url_for('static', filename='loaders.css.js') }}"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+    <script src="loaders.css.js"></script>
 
-    <script src="{{ url_for('static', filename='FileSaver.js') }}"></script>
-    <script src="{{ url_for('static', filename='claen_ws_data.js') }}"></script>
-    <script src="{{ url_for('static', filename='claen_answer_data.js') }}"></script>
-    <script src="{{ url_for('static', filename='title_data.js') }}"></script>
+    <script src="vendor/FileSaver.js"></script>
+    <script src="claen_ws_data.js"></script>
+    <script src="user_answer_data.js"></script>
 
     <script>
       $(function() {
         console.log("ALSS START");
-        ckearStorge();
         showexport();
         showinport();
         sendtext();
-        sendpredtext();
+        sendreviewpredtext();
         buildModel();
         outputText();
-        checkshowtitle();
-        sendreviewpredtext();
-        checkshowpre();
-        $('.loader-inner').loaders();
-        UpladFile();
-        //saveLocalDataTemp();
-        //sessionStorage.clear();
+        reschangepage();
+        loadallresult();
         
+        for(var i in ALL_USER_DATA){
+          _obj = ALL_USER_DATA[i];
+          _text = _obj.text;
+          _text = JSON.parse(_text);
+          console.log(_obj.name);
+          for(var a in _text){
+            console.log((_text[a].seg).length);
+          }
+        }
+        
+
+        $('.loader-inner').loaders();
+        reviewUpladFile();
         try {
           navigator.getBattery().then(function(battery) {
             function update() {
@@ -64,7 +70,6 @@
             update();
           });
         } catch(_) {}
-        annosegment();//啟動標註
         gettime();
         setInterval(gettime,1000);
         window.reading_prog=100;
@@ -99,9 +104,8 @@
           }
           fr.readAsText(event.originalEvent.dataTransfer.files[0]);
         });
-        $('textarea#inputalltxt').val(TEXT);
+  
       });
-      
     </script>
     
   </head>
@@ -118,18 +122,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="annotation.html">斷句標註介面
               </a>
             </li>
-            <!--li class="nav-item">
+            <li class="nav-item ">
               <a class="nav-link" href="review.html">回顧模式
               </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item active">
               <a class="nav-link" href="result.html">熱點模式
               </a>
-            </li-->
+            </li>
     
           </ul>
         </div>
@@ -159,7 +163,6 @@
             <div>區塊不確定性抽樣分數：<div id="text_score">--</div></div>
           </div>
           <div class="list-group">
-            <a class="list-group-item active" id="row-text" key =1 value=0>第1區塊</a>
 
           </div>
         </div>  
@@ -219,7 +222,7 @@
           <input type=file id=files />
           <button type="button" class="btn btn-default" id=upload>讀取檔案</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="loadall()">輸出</button>
+          <!--button type="button" class="btn btn-primary" onclick="loadall()">輸出</button-->
           
         </div>
       </div></div></div>
@@ -268,7 +271,9 @@
         </div>
         </div></div></div>
 
-        <div class="modal fade" id="ouputModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+
+
+        <div class="modal fade" id="GoodModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
         
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -276,54 +281,53 @@
         
 
         <h4 class="modal-title">
-                輸出文本&nbsp;
+                全部正確斷句排序&nbsp;
         </h4>
         <div class="modal-body">
-            <textarea id="outputtxt" class="form-control" placeholder="目前無內容……" name="input_text"></textarea>
-            <br>
+            
         </div>
-        <div class="modal-footer">
-          <button type="button" id="buildmodel" name="buildmodel" class="btn btn-default btn-sm">
-            <span id="prog">建立CRF模型</span>       
-          </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="exporttxt()">輸出</button>
+        <div class="modal-footer" >
+          <table class="table" id="segrightrank">
+            
+          </table>
+          
         </div>
         </div></div></div>
+
+        <div class="modal fade" id="BadModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+        
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        
+
+        <h4 class="modal-title">
+                全部錯誤斷句排序&nbsp;
+        </h4>
+        <div class="modal-body">
+            
+        </div>
+        <div class="modal-footer" >
+          <table class="table" id="segworngrank">
+            
+          </table>
+          
+        </div>
+        </div></div></div>
+
+
         </div>
         </div>
         <div class="col-lg-1" id="textmenu">
           <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendtext" class="btn btn-default btn-sm">
+            <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#GoodModal" title="打開輸出界面">
             <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">文本抽樣</span>       
+            <span id="goodsegrank">正確斷句</span>       
             </button>
-          </div>
-          <div class="btndiv">
-            <button type="button" id="txtbtn" name="sendpredtext" class="btn btn-default btn-sm">
+            <button type="button" id="txtbtn" class="btn btn-default btn-sm" data-toggle="modal" data-target="#BadModal" title="打開輸出界面">
             <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">預測文本</span>       
+            <span id="goodsegrank">錯誤斷句</span>       
             </button>
-          </div>
-          <div class="btndiv">
-            <button type="button" id="savetextbtn" name="savetext" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-book hidden-xs"></span>
-              <span id="prog">儲存結果</span>       
-            </button>
-          </div>
-          <!--div class="btndiv">
-            <button type="button" id="txtbtn" name="sendreviewpredtext" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-book hidden-xs"></span>
-            <span id="prog">回顧模式</span>       
-            </button>
-          </div-->
-          <div class="btndiv">
-            <input type="checkbox" id="showtitle">題名標亮
-            </input>
-          </div>
-          <div class="btndiv">
-            <input type="checkbox" id="showpre">預測標亮
-            </input>
           </div>
           </div>
         </div>
