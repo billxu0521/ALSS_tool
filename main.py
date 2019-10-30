@@ -30,11 +30,12 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['JSON_AS_ASCII'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-CORS(app)
+#CORS(app)
 Compress(app)
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+#cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config.from_object(DevConfig)
+app.jinja_env.auto_reload = True
 
 # 路由和處理函式配對
 @app.route('/')
