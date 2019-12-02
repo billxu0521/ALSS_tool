@@ -27,15 +27,12 @@ from flask_cors import CORS, cross_origin
 
 # 初始化 Flask 類別成為 instance
 app = Flask(__name__)
+app.config.from_object(DevConfig)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['JSON_AS_ASCII'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-#CORS(app)
-Compress(app)
-
-#cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.config.from_object(DevConfig)
 app.jinja_env.auto_reload = True
+Compress(app)
 
 # 路由和處理函式配對
 @app.route('/')
