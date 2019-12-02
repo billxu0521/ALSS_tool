@@ -6,7 +6,7 @@ gunicorn==19.6.0
 itsdangerous==0.24
 Jinja2==2.9.5
 MarkupSafe==0.23
-Werkzeug==0.11.15
+Werkzeug >= 0.14
 cffi==1.10.0
 numpy==1.15.4
 python-crfsuite==0.9.6
