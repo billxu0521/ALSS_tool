@@ -662,8 +662,8 @@ function sendtext(){
         }
         $('#loadmask').css('visibility', 'visible');
         $.ajax({
-            //url: 'https://alssapi.herokuapp.com/trainAndpredic_api',
-            url: 'http://localhost:5000/trainAndpredic_api',
+            url: 'https://alssapi.herokuapp.com/trainAndpredic_api',
+            //url: 'http://localhost:5000/trainAndpredic_api',
             //data: $('textarea#outputtxt').serialize(),
             data: $('textarea#outputtxt').val(JSON.stringify(alldata)),
             type: 'POST',
